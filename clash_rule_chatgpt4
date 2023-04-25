@@ -17,7 +17,7 @@ ruleset=DIRECT,[]GEOIP,CN,no-resolve
 ruleset=✈️ ‍起飞,[]FINAL
 
 add_emoji=true
-remove_old_emoji=false
+remove_old_emoji=true
 emoji=^(?!.*(?!🇨🇳)[🇦-🇿]{2}).*(澳[门門]),🇲🇴 
 emoji=^(?!.*(?!🇨🇳)[🇦-🇿]{2}).*(朝[鲜鮮]),🇰🇵 
 emoji=^(?!.*(?!🇨🇳)[🇦-🇿]{2}).*(澳大利[亚亞]|澳洲|悉尼|墨尔本),🇦🇺 
@@ -231,7 +231,7 @@ emoji=^(?!.*(?!🇨🇳)[🇦-🇿]{2}).*(?i:(?<![\da-z.])(HKG?|CMI|HGC|HKT|HKBN
 emoji=^(?!.*(?!🇨🇳)[🇦-🇿]{2}).*(?i:(?<![\da-z.])CH?N(?!\d*[a-z])|China),🇨🇳 
 
 custom_proxy_group=✈️ ‍起飞`select`[]⚡ ‍低延迟`[]🔯 故障转移`.*
-custom_proxy_group=⚡ ‍低延迟`url-test`.*`http://www.gstatic.com/generate_204`300,,70
+custom_proxy_group=⚡ ‍低延迟`url-test`.*`http://www.gstatic.com/generate_204`300,,50
 custom_proxy_group=🔯 故障转移`fallback`.*`http://www.gstatic.com/generate_204`300,,50
 custom_proxy_group=🤖 OpenAi`url-test`(美|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|US|United States|America|California|America|United.*States|Washington|Portland|Dallas|Oregon|Phoenix|Fremont|Valley|Francisco|Vegas|Los.*Angeles|San.*Jose|Santa.*Clara|Seattle|Chicago|Columbus|York|Ashburn)`http://www.gstatic.com/generate_204`300,,100
 enable_rule_generator=true
