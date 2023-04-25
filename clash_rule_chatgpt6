@@ -16,6 +16,8 @@ ruleset=DIRECT,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ch
 ruleset=DIRECT,[]GEOIP,CN,no-resolve
 ruleset=✈️ ‍起飞,[]FINAL
 
+exclude_remarks=(Data Left|Traffic:|Expir[ey]|剩[余餘]流量|[到过過效]期|[时時][间間]|分割线|新节点|刷新|一元|群组)
+
 add_emoji=true
 remove_old_emoji=true
 emoji=^(?!.*(?!🇨🇳)[🇦-🇿]{2}).*(澳[门門]),🇲🇴 
