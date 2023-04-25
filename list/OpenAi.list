@@ -5,6 +5,9 @@ DOMAIN-SUFFIX,cloudflare.com
 DOMAIN-SUFFIX,compute-pipe.com
 DOMAIN-SUFFIX,edgecompute.app
 DOMAIN-SUFFIX,every1dns.net
+DOMAIN-KEYWORD,openai
+DOMAIN-SUFFIX,challenges.cloudflare.com
+DOMAIN-SUFFIX,openaiapi-site.azureedge.net
 DOMAIN-SUFFIX,bing.com
 DOMAIN-SUFFIX,bing.com.cn
 DOMAIN-SUFFIX,bing.net
