@@ -20,7 +20,7 @@ ruleset=✈️ ‍起飞,[]FINAL
 exclude_remarks=(Data Left|Traffic:|Expir[ey]|剩[余餘]流量|[到过過效]期|[时時][间間]|分割线|新节点|刷新|一元|群组|关注)
 
 add_emoji=true
-remove_old_emoji=true
+remove_old_emoji=false
 emoji=^(?!.*(?!🇨🇳)[🇦-🇿]{2}).*(澳[门門]),🇲🇴 
 emoji=^(?!.*(?!🇨🇳)[🇦-🇿]{2}).*(朝[鲜鮮]),🇰🇵 
 emoji=^(?!.*(?!🇨🇳)[🇦-🇿]{2}).*(澳大利[亚亞]|澳洲|悉尼|墨尔本),🇦🇺 
