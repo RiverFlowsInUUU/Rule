@@ -18,15 +18,13 @@ ruleset=DIRECT,[]GEOIP,CN,no-resolve
 ruleset=✈️ ‍Proxy,[]FINAL
 
 
-rule:
-  - TYPE: plain
-    KEYWORD: 日本
-    REPLACE-WITH: JP
+
 
 exclude_remarks=(Data Left|Traffic:|Expir[ey]|剩[余餘]流量|[到过過效]期|[时時][间間]|分割线|新节点|刷新|一元|群组|关注|中国|CN|cn)
 
 add_emoji=true
 remove_old_emoji=true
+s/^(?!.*(?!🇨🇳)[🇦-🇿]{2}).*(日本)/JP/
 emoji=^(?!.*(?!🇨🇳)[🇦-🇿]{2}).*(澳[门門]),🇲🇴 
 emoji=^(?!.*(?!🇨🇳)[🇦-🇿]{2}).*(朝[鲜鮮]),🇰🇵 
 emoji=^(?!.*(?!🇨🇳)[🇦-🇿]{2}).*(澳大利[亚亞]|澳洲|悉尼|墨尔本),🇦🇺 
