@@ -18,8 +18,8 @@ ruleset=DIRECT,[]GEOIP,CN,no-resolve
 ruleset=✈️ ‍Proxy,[]FINAL
 
 
-rename=!!import:https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/list/1553.list
-rename=!!import:https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/list/666.list
+rename=!!import:https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/list/1639.list
+
 
 exclude_remarks=(Data Left|Traffic:|Expir[ey]|剩[余餘]流量|[到过過效]期|[时時][间間]|分割线|新节点|刷新|一元|群组|关注|中国|CN|cn)
 
