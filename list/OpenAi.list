@@ -1,4 +1,5 @@
 # https://raw.githubusercontent.com/Twoandz9/Clash/main/list/OpenAi.list
+# Google Bard and OpenAI cannot be used in Hong Kong region.
 DOMAIN-SUFFIX,openai.com
 DOMAIN-SUFFIX,openai.nooc.ink
 DOMAIN-SUFFIX,AI.com
