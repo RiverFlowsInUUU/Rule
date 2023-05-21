@@ -238,7 +238,6 @@ emoji=^(?!.*(?!🇨🇳)[🇦-🇿]{2}).*(?i:(?<![\da-z.])(HKG?|CMI|HGC|HKT|HKBN
 emoji=^(?!.*(?!🇨🇳)[🇦-🇿]{2}).*(?i:(?<![\da-z.])CH?N(?!\d*[a-z])|China),🇨🇳 
 
 
-custom_proxy_group=❄️ ‍Proxy`select`[]⚖️ Hashing
-custom_proxy_group=⚖️ Hashing`load-balance`.*`http://www.google.com/generate_204`300
+custom_proxy_group=❄️ ‍Proxy`select`
 enable_rule_generator=true
 overwrite_original_rules=true
