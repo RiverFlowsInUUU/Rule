@@ -25,8 +25,8 @@
     { "tag": "tun-in", "type": "tun", "inet4_address": "172.19.0.1/30", "inet6_address": "fdfe:dcba:9876::1/126", "auto_route": true, "strict_route": true, "stack": "mixed", "sniff": true, "always_resolve_udp": true }
   ],
   "outbounds": [
-    { "tag": "🚀 节点选择", "type": "selector", "outbounds": [ "🇭🇰 香港节点", "🆓 免费节点", "🇹🇼 台湾节点", "🇯🇵 日本节点", "🇰🇷 韩国节点", "🇸🇬 新加坡节点", "🇺🇸 美国节点" ] },
-    { "tag": "📈 网络测试", "type": "selector", "outbounds": [ "🎯 全球直连", "🇭🇰 香港节点", "🆓 免费节点", "🇹🇼 台湾节点", "🇯🇵 日本节点", "🇰🇷 韩国节点", "🇸🇬 新加坡节点", "🇺🇸 美国节点" ] },
+    { "tag": "🚀 节点选择", "type": "selector", "outbounds": [ "🆓 免费节点"] },
+    { "tag": "📈 网络测试", "type": "selector", "outbounds": [ "🎯 全球直连", "🆓 免费节点" ] },
     { "tag": "🐟 漏网之鱼", "type": "selector", "outbounds": [ "🚀 节点选择", "🎯 全球直连" ] },
     { "tag": "🇨🇳 直连域名", "type": "selector", "outbounds": [ "🎯 全球直连", "🚀 节点选择" ] },
     { "tag": "🪜 代理域名", "type": "selector", "outbounds": [ "🚀 节点选择", "🎯 全球直连" ] },
@@ -42,7 +42,7 @@
     { "tag": "🎯 全球直连", "type": "selector", "outbounds": [ "DIRECT" ] },
     { "tag": "REJECT", "type": "block" },
     { "tag": "DIRECT", "type": "direct", "domain_strategy": "prefer_ipv6" },
-    { "tag": "GLOBAL", "type": "selector", "outbounds": [ "DIRECT", "REJECT", "🇭🇰 香港节点", "🆓 免费节点", "🇹🇼 台湾节点", "🇯🇵 日本节点", "🇰🇷 韩国节点", "🇸🇬 新加坡节点", "🇺🇸 美国节点" ] },
+    { "tag": "GLOBAL", "type": "selector", "outbounds": [ "DIRECT", "REJECT", "🆓 免费节点" ] },
     { "tag": "dns-out", "type": "dns" },
     {
       "tag": "🆓 免费节点",
@@ -54,26 +54,7 @@
       "tls": { "enabled": true, "server_name": "example.com", "insecure": false },
       "transport": { "type": "ws", "path": "/?ed=2048", "headers": { "Host": "example.com" } }
     },
-    { "tag": "🇭🇰 香港节点", "type": "urltest", "tolerance": 50, "providers": [ "🅱️ Bitz Net" ], "includes": [ "🇭🇰.*BGP|🇭🇰.*Akari" ] },
-    { "tag": "🇹🇼 台湾节点", "type": "urltest", "tolerance": 50, "providers": [ "🅱️ Bitz Net" ], "includes": [ "🇹🇼" ] },
-    { "tag": "🇯🇵 日本节点", "type": "urltest", "tolerance": 50, "providers": [ "🅱️ Bitz Net" ], "includes": [ "🇯🇵" ] },
-    { "tag": "🇰🇷 韩国节点", "type": "urltest", "tolerance": 50, "providers": [ "🅱️ Bitz Net" ], "includes": [ "🇰🇷" ] },
-    { "tag": "🇸🇬 新加坡节点", "type": "urltest", "tolerance": 50, "providers": [ "🅱️ Bitz Net" ], "includes": [ "🇸🇬" ] },
-    { "tag": "🇺🇸 美国节点", "type": "urltest", "tolerance": 50, "providers": [ "🅱️ Bitz Net" ], "includes": [ "🇺🇸" ] }
-  ],
-  "outbound_providers": [
-    {
-      "tag": "🅱️ Bitz Net",
-      "type": "http",
-      "healthcheck_url": "https://www.gstatic.com/generate_204",
-      "healthcheck_interval": "10m",
-      // 修改为你的 Clash 订阅链接
-      "download_url": "https://example.com/xxx/xxx&flag=clash",
-      "path": "./providers/airport.yaml",
-      "includes": [ "🇭🇰|🇹🇼|🇯🇵|🇰🇷|🇸🇬|🇺🇸" ],
-      "download_ua": "clash.meta",
-      "download_interval": "24h"
-    }
+
   ],
   "route": {
     "rules": [
@@ -92,7 +73,7 @@
       { "rule_set": [ "cn" ], "outbound": "🇨🇳 直连域名" },
       { "rule_set": [ "telegramip" ], "outbound": "📲 电报消息", "skip_resolve": true },
       { "rule_set": [ "privateip" ], "outbound": "🔒 私有网络", "skip_resolve": true },
-      { "rule_set": [ "cnip" ], "outbound": "🇨🇳 直连 IP" }
+      { "rule_set": [ "cnip" ], "outbound": "🇨🇳 直连 IP" ,"skip_resolve": true }
     ],
     "rule_set": [
       {
