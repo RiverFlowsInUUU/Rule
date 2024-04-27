@@ -74,12 +74,12 @@ dns:
 proxy-providers:
   1.主要地址:
     <<: *p
-    url: "引入您的Clash订阅链接地址"
+    url: "订阅地址1"
     path: ./proxy_providers/subscribe1.yaml
     #注意！如果您的订阅链接中带有“&”字符，请删掉.
   2.备用地址:
     <<: *p
-    url: "引入您的Clash订阅链接地址"
+    url: "订阅地址2"
     path: ./proxy_providers/subscribe2.yaml
     #注意！如果您的订阅链接中带有“&”字符，请删掉.
 proxy-groups:
@@ -94,6 +94,7 @@ proxy-groups:
   - {name: 🎶 Spotify, type: select, proxies: [🎯 总模式,♻️ 自动切换,♻️ 手动切换1,♻️ 手动切换2,♻️ 手动切换3,🌎 直连]}
   - {name: Ⓜ️ 微软服务, type: select, proxies: [🌎 直连,🎯 总模式,♻️ 自动切换,♻️ 手动切换1,♻️ 手动切换2,♻️ 手动切换3]}
   - {name: Ⓜ️ 微软云盘, type: select, proxies: [🌎 直连,🎯 总模式,♻️ 自动切换,♻️ 手动切换1,♻️ 手动切换2,♻️ 手动切换3]}
+  - {name: 📢 谷歌服务, type: select, proxies: [🎯 总模式,♻️ 自动切换,♻️ 手动切换1,♻️ 手动切换2,♻️ 手动切换3,🌎 全球直连]}
   - {name: 🛑 广告拦截, type: select, proxies: [REJECT,🌎 直连]}
   - {name: 🐋 漏网之鱼, type: select, proxies: [🎯 总模式,🌎 直连]}
   - {name: 🌎 直连, type: select, proxies: [DIRECT]}
@@ -133,13 +134,21 @@ rule-providers:
     path: ./rule/Openai.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Openai.yaml"
     interval: 86400
+  Google:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule/Google.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Google.yaml"
+    interval: 86400
 rules:
-  - RULE-SET,Microsoft,Ⓜ️ 微软服务
   - RULE-SET,Bing,Ⓜ️ 微软Bing
-  - RULE-SET,Onedrive,Ⓜ️ 微软云盘
-  - RULE-SET,Spotify,🎶 Spotify
   - RULE-SET,Openai,🤖 OpenAI
+  - RULE-SET,Spotify,🎶 Spotify
   #- GEOSITE,category-ads-all,🛑 广告拦截
+  - RULE-SET,Microsoft,Ⓜ️ 微软服务
+  - RULE-SET,Onedrive,Ⓜ️ 微软云盘
+  - RULE-SET,Google,📢 谷歌服务
   - GEOSITE,CN,🌎 直连
   - GEOIP,private,🌎 直连,no-resolve
   - GEOIP,CN,🌎 直连,no-resolve
