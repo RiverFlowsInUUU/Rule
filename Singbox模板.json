@@ -1,65 +1,85 @@
 {
   "log": {
     "level": "info",
+    "output": "sing-box.log",
     "timestamp": true
   },
   "dns": {
     "servers": [
       {
-        "tag": "DNST",
-        "address": "tls://8.8.8.8"
+        "tag": "alidns",
+        "address": "https://dns.alidns.com/dns-query",
+        "address_resolver": "dns-direct",
+        "address_strategy": "prefer_ipv4",
+        "strategy": "ipv4_only",
+        "detour": "direct"
       },
       {
-        "tag": "DNSH",
-        "address": "https://1.1.1.1/dns-query",
-        "detour": "🎯 HOST"
+        "tag": "cf",
+       "address": "https://dns.google/dns-query",
+        "address_resolver": "dns-direct",
+        "strategy": "ipv4_only",
+        "detour": "proxy"
+      },
+   {
+        "tag": "dns-direct",
+        "address": "local",
+        "address_resolver": "dns-local",
+        "strategy": "ipv4_only",
+        "detour": "direct"
       }
     ],
     "rules": [
       {
-        "outbound": "any",
-        "server": "DNSH"
+        "domain": "myChinaDnsSite.com",
+        "domain_suffix": ".cn",
+        "geosite": "cn",
+        "server": "alidns"
       }
     ],
+    "final": "cf",
     "strategy": "ipv4_only"
   },
   "inbounds": [
     {
       "type": "tun",
-      "tag": "tun",
-      "interface_name": "tun",
+      "tag": "tun-in",
+      "interface_name": "utun",
       "mtu": 9000,
       "inet4_address": "172.19.0.1/30",
       "auto_route": true,
       "strict_route": true,
       "udp_timeout": "5m0s",
-      "stack": "system",
+      "stack": "gvisor",
       "sniff": true,
       "sniff_timeout": "300ms"
     }
   ],
   "outbounds": [
     {
-      "type": "hysteria2",
+      "type": "vless",
       "tag": "proxy",
-      "server": "60.249.3.227",
-      "server_port": 3074,
-      "up_mbps": 30,
-      "down_mbps": 100,
-      "password": "NDE0NTc3OjExMTIwMTplODE1ODQ3YmIyZGJjZDM0=TG @WangCai_8=",
+      "server": "8.217.21.92",
+      "server_port": 56231,
+      "uuid": "5fe3dcc7-7221-4961-8aeb-9c404ca20a27",
+      "flow": "xtls-rprx-vision",
       "tls": {
         "enabled": true,
-        "insecure": true,
-        "alpn": "h3"
-      }
+        "server_name": "www.icloud.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": "g1f1wLjim5gOVGnI5LGUV0dL4iFXPoiepOPZfSxJe14"
+        }
+      },
+      "packet_encoding": "xudp"
     },
     {
       "type": "direct",
       "tag": "direct"
-    },
-    {
-      "type": "block",
-      "tag": "block"
     },
     {
       "type": "dns",
@@ -101,10 +121,6 @@
           "private"
         ],
         "outbound": "direct"
-      },
-      {
-        "geosite": "category-ads-all",
-        "outbound": "block"
       }
     ],
     "final": "proxy",
