@@ -25,8 +25,8 @@
     { "tag": "tun-in", "type": "tun", "inet4_address": "172.19.0.1/30", "inet6_address": "fdfe:dcba:9876::1/126", "auto_route": true, "strict_route": true, "stack": "mixed", "sniff": true, "always_resolve_udp": true }
   ],
   "outbounds": [
-    { "tag": "🚀 节点选择", "type": "selector", "outbounds": [ "🆓 免费节点"] },
-    { "tag": "📈 网络测试", "type": "selector", "outbounds": [ "🎯 全球直连", "🆓 免费节点" ] },
+    { "tag": "🚀 节点选择", "type": "selector", "outbounds": [ "proxy"] },
+    { "tag": "📈 网络测试", "type": "selector", "outbounds": [ "🎯 全球直连", "proxy" ] },
     { "tag": "🐟 漏网之鱼", "type": "selector", "outbounds": [ "🚀 节点选择", "🎯 全球直连" ] },
     { "tag": "🇨🇳 直连域名", "type": "selector", "outbounds": [ "🎯 全球直连", "🚀 节点选择" ] },
     { "tag": "🪜 代理域名", "type": "selector", "outbounds": [ "🚀 节点选择", "🎯 全球直连" ] },
@@ -42,10 +42,10 @@
     { "tag": "🎯 全球直连", "type": "selector", "outbounds": [ "DIRECT" ] },
     { "tag": "REJECT", "type": "block" },
     { "tag": "DIRECT", "type": "direct", "domain_strategy": "prefer_ipv6" },
-    { "tag": "GLOBAL", "type": "selector", "outbounds": [ "DIRECT", "REJECT", "🆓 免费节点" ] },
+    { "tag": "GLOBAL", "type": "selector", "outbounds": [ "DIRECT", "REJECT", "proxy" ] },
     { "tag": "dns-out", "type": "dns" },
     {
-      "tag": "🆓 免费节点",
+      "tag": "proxy",
       "type": "vless",
       "server": "example.com",
       "server_port": 443,
