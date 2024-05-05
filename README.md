@@ -1,4 +1,4 @@
-# Personal Clash Template:
+# Personal Clash/Shadowrocker/Sing-box Template:
 
 1.Fixed DNS leaks  
 2.Added country emojis  
