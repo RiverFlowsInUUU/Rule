@@ -1,0 +1,128 @@
+{
+  "log": {},
+  "dns": {
+    "servers": [
+      {
+        "tag": "remote",
+        "address": "tcp://8.8.8.8",
+        "detour": "select"
+      },
+      {
+        "tag": "local",
+        "address": "223.5.5.5",
+        "detour": "direct"
+      },
+       {
+        "tag": "fakeip",
+        "address": "fakeip"
+      }
+    ],
+    "rules": [
+      {
+        "outbound": "any",
+        "server": "local"
+      },
+      {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "server": "fakeip",
+        "rewrite_ttl": 1
+      },
+  
+      {
+        "geosite": "cn",
+        "server": "local"
+      }
+    ],
+    "fakeip": {
+      "enabled": true,
+      "inet4_range": "198.18.0.0/15",
+      "inet6_range": "fc00::/18"
+    },
+    "strategy": "prefer_ipv4",
+    "independent_cache": true
+  },
+  "inbounds": [
+    {
+      "type": "tun",
+      "tag": "tun-in",
+      "interface_name": "utun",
+      "mtu": 9000,
+      "inet4_address": "172.19.0.1/30",
+      "auto_route": true,
+      "strict_route": true,
+      "udp_timeout": "5m0s",
+      "stack": "mixed",
+      "sniff": true,
+      "sniff_timeout": "300ms"
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "hysteria2",
+      "tag": "proxy",
+      "server": "60.249.3.227",
+      "server_port": 3074,
+      "up_mbps": 30,
+      "down_mbps": 100,
+      "password": "NDE0NTc3OjExMTIwMTplODE1ODQ3YmIyZGJjZDM0=TG @WangCai_8=",
+      "tls": {
+        "enabled": true,
+        "insecure": true,
+        "alpn": "h3"
+      }
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    },
+  
+    {
+      "type": "dns",
+      "tag": "dns-out"
+    }
+  ],
+  "route": {
+    "geoip": {
+      "path": "geoip.db",
+      "download_url": "https://github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db",
+      "download_detour": "direct"
+    },
+    "geosite": {
+      "path": "geosite.db",
+      "download_url": "https://github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db",
+      "download_detour": "direct"
+    },
+    "rules": [
+      {
+        "protocol": "dns",
+        "outbound": "dns-out"
+      },
+      {
+        "domain": "myProxy.com",
+        "outbound": "proxy"
+      },
+      {
+        "domain": "myDirect.com",
+        "outbound": "direct"
+      },
+      {
+        "domain_suffix": ".cn",
+        "geosite": [
+          "cn",
+          "private"
+        ],
+        "geoip": [
+          "cn",
+          "private"
+        ],
+        "outbound": "direct"
+      }
+    ],
+    "final": "proxy",
+    "auto_detect_interface": true
+  },
+  "experimental": {}
+}
