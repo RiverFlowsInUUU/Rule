@@ -2,6 +2,7 @@
 # Google Bard and OpenAI cannot be used in Hong Kong region.
 DOMAIN-SUFFIX,openai.com
 DOMAIN-SUFFIX,openai.nooc.ink
+DOMAIN-SUFFIX,chatgpt.com
 DOMAIN-SUFFIX,AI.com
 DOMAIN-SUFFIX,claude.ai
 DOMAIN-SUFFIX,cloudflare.com
