@@ -1,5 +1,5 @@
 payload:
-  # 2024-05-14 23:38:47
+  # 2024-05-14 23:38:47 https://gitlab.com/lodepuly/vpn_tool/-/raw/master/Tool/Clash/Rule/AI.yaml
   # ChatGPT
   - AND,((DOMAIN-KEYWORD,chatgpt-async-webps-prod-eastus-),(DOMAIN-KEYWORD,.webpubsub.azure.com))
   - DOMAIN,chat.openai.com.cdn.cloudflare.net
