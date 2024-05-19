@@ -125,7 +125,7 @@ p: &p
 
 # 策略组
 pr: &pr 
-  {type: select, proxies: [DIRECT, REJECT, 🚀手动选择, ♻️自动选择, 🔯负载均衡, 🛠故障转移, 🇭🇰香港, 🇹🇼台湾, 🇯🇵日本, 🇸🇬新加坡, 🇺🇸美国, 🌎其它地区, 💎专线, 🌍全部节点]}
+  {type: select, proxies: [♻️自动选择, 🚀手动选择, 🔯负载均衡, 🛠故障转移, DIRECT,🇭🇰香港, 🇹🇼台湾, 🇯🇵日本, 🇸🇬新加坡, 🇰🇷韩国, 🇺🇸美国, 🌎其它地区, 🌍全部节点]}
 
 # 节点筛选
 u: &u 
@@ -158,7 +158,7 @@ proxy-groups:
   - {name: 🌍DNS解析, <<: *pr}
   - {name: 🇨🇳国内直连, <<: *pr}
   - {name: 🌎代理, <<: *pr}
-  - {name: 🚀手动选择, type: select, proxies: [DIRECT, REJECT, ♻️自动选择, 🔯负载均衡, 🛠故障转移, 🇭🇰香港, 🇹🇼台湾, 🇯🇵日本, 🇸🇬新加坡, 🇺🇸美国, 🌎其它地区, 💎专线, 🌍全部节点]}
+  - {name: 🚀手动选择, type: select, proxies: [DIRECT, REJECT, ♻️自动选择, 🔯负载均衡, 🛠故障转移, 🇭🇰香港, 🇹🇼台湾, 🇯🇵日本, 🇸🇬新加坡, 🇺🇸美国, 🌎其它地区, 🌍全部节点]}
   - {name: ♻️自动选择, <<: *u, type: url-test, url: 'https://www.gstatic.com/generate_204', interval: 300, tolerance: 5, lazy: true}
   - {name: 🔯负载均衡, <<: *u, type: load-balance, strategy: consistent-hashing, url: 'https://www.gstatic.com/generate_204', interval: 300, lazy: true}
   - {name: 🛠故障转移, type: fallback, proxies: [🇭🇰香港, 🇹🇼台湾, 🇯🇵日本, 🇸🇬新加坡, 🇺🇸美国, 🌎其它地区, 💎专线, 🌍全部节点], url: 'https://www.gstatic.com/generate_204', interval: 300, lazy: true}
@@ -169,19 +169,12 @@ proxy-groups:
   - {name: 📲Telegram, <<: *pr}
   - {name: 📳Github, <<: *pr}
   - {name: 🤖人工智障, <<: *pr}
-  - {name: Ⓜ️MEGA, <<: *pr}
+  - {name: 🤖人工智障, <<: *pr}
+  - {name: 🤖人工智障, <<: *pr}
   - {name: 🔐Google, <<: *pr}
   - {name: Ⓜ️Microsoft, <<: *pr}
   - {name: 🍎Apple, <<: *pr}
-  - {name: 🐦Twitter, <<: *pr}
-  - {name: 🅿️Pixiv, <<: *pr}
-  - {name: 🅿️PikPak, <<: *pr}
-  - {name: 👛Paypal, <<: *pr}
-  - {name: 🎮Steam, <<: *pr}
-  - {name: 📹TikTok, <<: *pr}
-  - {name: 📺Netflix, <<: *pr}
   - {name: 🎵Spotify, <<: *pr}
-  - {name: ⛔️GFW, <<: *pr}
   - {name: 🐟漏网之鱼, <<: *pr}
 
 # 节点筛选
@@ -190,8 +183,8 @@ proxy-groups:
   - {name: 🇯🇵日本, <<: *u, filter: "(?i)日本|jp|japan"}
   - {name: 🇺🇸美国, <<: *u, filter: "(?i)^(?!.*(?:RU)).*(美|us|unitedstates|united states)"}
   - {name: 🇸🇬新加坡, <<: *u, filter: "(?i)(新|sg|singapore)"}
+  - {name: 🇰🇷韩国, <<: *u, filter: "(?i)(韩|kr|首尔|Korea)"}
   - {name: 🌎其它地区, <<: *u, filter: "(?i)^(?!.*(?:🇭🇰|🇯🇵|🇺🇸|🇸🇬|🇹🇼|港|hk|hongkong|hong kong|台|tw|taiwan|tai|日|jp|japan|新|sg|singapore|美|us|unitedstates)).*"}
-  - {name: 💎专线, <<: *u, filter: "(?i)奈飞|解锁|原生|gpt|Netflix"}
   - {name: 🌍全部节点, <<: *u}
 
 rule-providers:
@@ -199,9 +192,6 @@ rule-providers:
 
   Gemini: {type: http, path: ./rule-providers/Gemini.yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Gemini/Gemini.yaml", interval: 86400, behavior: classical, format: yaml}
   Copilot: {type: http, path: ./rule-providers/Copilot.yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Copilot/Copilot.yaml", interval: 86400, behavior: classical, format: yaml}
-  支付宝: {type: http, path: ./rule-providers/支付宝.yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/AliPay/AliPay.yaml", interval: 86400, behavior: classical, format: yaml}
-  抖音: {type: http, path: ./rule-providers/抖音.yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/DouYin/DouYin.yaml", interval: 86400, behavior: classical, format: yaml}
-  WeChat: {type: http, path: ./rule-providers/WeChat.yaml, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/WeChat/WeChat.yaml", interval: 86400, behavior: classical, format: yaml}
   自定义代理: {type: file, path: ./rule-providers/自定义代理.yaml, behavior: classical, format: yaml}
   自定义直连: {type: file, path: ./rule-providers/自定义直连.yaml, behavior: classical, format: yaml}
 
@@ -213,47 +203,30 @@ rules:
 
 # 直连
 # 以下规则用不到的直接删除即可，别忘了同时删 proxy-groups 部分
-  - RULE-SET,WeChat,🇨🇳国内直连
-  - RULE-SET,支付宝,🇨🇳国内直连
-  - RULE-SET,抖音,🇨🇳国内直连
+
   - RULE-SET,自定义直连,🇨🇳国内直连
-  - GEOSITE,xiaomi,🇨🇳国内直连
-  - GEOSITE,bilibili,🇨🇳国内直连
-  - GEOSITE,category-netdisk-cn,🇨🇳国内直连
 
 # 代理
   - GEOSITE,telegram,📲Telegram
   - GEOSITE,github,📳Github
   - GEOSITE,googlefcm,🔔Google FCM
   - GEOSITE,youtube,📺YouTube
-  - RULE-SET,Gemini,🤖人工智障
+  - RULE-SET,Gemini,🤖Gemini
   - GEOSITE,google,🔐Google
   - GEOSITE,mega,Ⓜ️MEGA
   - RULE-SET,自定义代理,🌎代理
-  - GEOSITE,openai,🤖人工智障
-  - RULE-SET,Copilot,🤖人工智障
+  - GEOSITE,openai,🤖Openai
+  - RULE-SET,Copilot,🤖Copilot
   - GEOSITE,microsoft,Ⓜ️Microsoft
   - GEOSITE,apple,🍎Apple
-  - GEOSITE,twitter,🐦Twitter
-  - GEOSITE,pixiv,🅿️Pixiv
-  - GEOSITE,pikpak,🅿️PikPak
-  - GEOSITE,steam,🎮Steam
-  - GEOSITE,tiktok,📹TikTok
-  - GEOSITE,paypal,👛Paypal
-  - GEOSITE,netflix,📺Netflix
   - GEOSITE,Spotify,🎵Spotify
   - GEOSITE,GFW,⛔️GFW
   - GEOSITE,CN,🇨🇳国内直连
-  - GEOSITE,geolocation-!cn,🌎代理
   - GEOSITE,private,DIRECT,no-resolve
 
 # GEOIP
-  - GEOIP,telegram,📲Telegram
-  - GEOIP,google,🔐Google
-  - GEOIP,twitter,🐦Twitter
-  - GEOIP,netflix,📺Netflix
   - GEOIP,CN,🇨🇳国内直连
-  - GEOIP,private,DIRECT,no-resolve
+  - GEOIP,private,DIRECT
 
 # 兜底规则
   - MATCH,🐟漏网之鱼
