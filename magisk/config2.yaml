@@ -131,12 +131,12 @@ pr: &pr
 u: &u 
   type: url-test
   use:
-    - 🛫 miaona
-    - 🛫 魔戒
-    - 🛫 极速云
-    - 🛫 顶级机场
-    - 🛫 飞鸟云
-    - 🛫 淘气兔
+    - 🛫 机场1
+    - 🛫 机场2
+    - 🛫 机场3
+    - 🛫 机场4
+    - 🛫 机场5
+    - 🛫 机场6
   exclude-filter: "套餐|流量|群组|频道|官网|推荐使用|测试|电报" #排除满足关键词或正则表达式的节点
   exclude-type: "http" #排除指定类型的节点，不支持正则表达式，通过 | 分割
 
@@ -145,23 +145,23 @@ proxy-providers:
 # 需要修改机场名，订阅，存储目录
 # 别忘了同时修改 节点筛选部分的机场名
 
-  🛫 miaona: {<<: *p, url: "https://miaona.org/#/register?code=C3J67GSL", path: ./机场/可乐云.yaml, override: {additional-prefix: "可乐云 | "}}
-  🛫 魔戒: {<<: *p, url: "https://www.mojie.cyou/#/register?code=YjlCVXjA", path: ./机场/魔戒.yaml, override: {additional-prefix: "魔戒 | "}}
-  🛫 极速云: {<<: *p, url: "https://512.jsy.lol/#/register?code=KmIpamty", path: ./机场/极速云.yaml, override: {additional-prefix: "极速云 | "}}
-  🛫 顶级机场: {<<: *p, url: "https://xn--mes358a9urctx.com/#/register?code=wiPXjyYq", path: ./机场/顶级机场.yaml, override: {additional-prefix: "顶级机场 | "}}
-  🛫 飞鸟云: {<<: *p, url: "https://www.feiniaoyun.xyz/#/register?code=1gZX21aI", path: ./机场/飞鸟云.yaml, override: {additional-prefix: "飞鸟云 | "}}
-  🛫 淘气兔: {<<: *p, url: "https://vip.taoqitu.pro/index.html?register=rNh8X1zf", path: ./机场/淘气兔.yaml, override: {additional-prefix: "淘气兔 | "}}
+  🛫 机场1: {<<: *p, url: "订阅地址", path: ./机场/机场1.yaml, override: {additional-prefix: "机场1 | "}}
+  🛫 机场2: {<<: *p, url: "订阅地址", path: ./机场/机场2.yaml, override: {additional-prefix: "机场2 | "}}
+  🛫 机场3: {<<: *p, url: "订阅地址", path: ./机场/机场3.yaml, override: {additional-prefix: "机场3 | "}}
+  🛫 机场4: {<<: *p, url: "订阅地址", path: ./机场/机场4.yaml, override: {additional-prefix: "机场4 | "}}
+  🛫 机场5: {<<: *p, url: "订阅地址", path: ./机场/机场5.yaml, override: {additional-prefix: "机场5 | "}}
+  🛫 机场6: {<<: *p, url: "订阅地址", path: ./机场/机场6.yaml, override: {additional-prefix: "机场6 | "}}
 
 proxy-groups:
 # 代理组
 # 模式选择
-  - {name: 🌍DNS解析, <<: *pr}
-  - {name: 🇨🇳国内直连, <<: *pr}
+  - {name: 🌍总策略, <<: *pr}
   - {name: 🌎代理, <<: *pr}
-  - {name: 🚀手动选择, type: select, proxies: [DIRECT, REJECT, ♻️自动选择, 🔯负载均衡, 🛠故障转移, 🇭🇰香港, 🇹🇼台湾, 🇯🇵日本, 🇸🇬新加坡, 🇺🇸美国, 🌎其它地区, 🌍全部节点]}
+  - {name: 🚀手动选择, type: select, proxies: [DIRECT, ♻️自动选择, 🔯负载均衡, 🛠故障转移, 🇭🇰香港, 🇹🇼台湾, 🇯🇵日本, 🇸🇬新加坡, 🇺🇸美国, 🌎其它地区, 🌍全部节点]}
   - {name: ♻️自动选择, <<: *u, type: url-test, url: 'https://www.gstatic.com/generate_204', interval: 300, tolerance: 5, lazy: true}
   - {name: 🔯负载均衡, <<: *u, type: load-balance, strategy: consistent-hashing, url: 'https://www.gstatic.com/generate_204', interval: 300, lazy: true}
   - {name: 🛠故障转移, type: fallback, proxies: [🇭🇰香港, 🇹🇼台湾, 🇯🇵日本, 🇸🇬新加坡, 🇺🇸美国, 🌎其它地区, 💎专线, 🌍全部节点], url: 'https://www.gstatic.com/generate_204', interval: 300, lazy: true}
+  - {name: 🐼国内直连, DIRECT}
 
 # 分流
   - {name: 🔔Google FCM, <<: *pr}
@@ -204,28 +204,22 @@ rules:
 # 直连
 # 以下规则用不到的直接删除即可，别忘了同时删 proxy-groups 部分
 
-  - RULE-SET,自定义直连,🇨🇳国内直连
+  - RULE-SET,自定义直连,🐼国内直连
 
 # 代理
-  - GEOSITE,telegram,📲Telegram
-  - GEOSITE,github,📳Github
-  - GEOSITE,googlefcm,🔔Google FCM
-  - GEOSITE,youtube,📺YouTube
+
   - RULE-SET,Gemini,🤖Gemini
-  - GEOSITE,google,🔐Google
-  - GEOSITE,mega,Ⓜ️MEGA
-  - RULE-SET,自定义代理,🌎代理
-  - GEOSITE,openai,🤖Openai
   - RULE-SET,Copilot,🤖Copilot
+  - GEOSITE,openai,🤖Openai
+  - RULE-SET,自定义代理,🌎代理
   - GEOSITE,microsoft,Ⓜ️Microsoft
   - GEOSITE,apple,🍎Apple
   - GEOSITE,Spotify,🎵Spotify
-  - GEOSITE,GFW,⛔️GFW
-  - GEOSITE,CN,🇨🇳国内直连
+  - GEOSITE,CN,🐼国内直连
   - GEOSITE,private,DIRECT,no-resolve
 
 # GEOIP
-  - GEOIP,CN,🇨🇳国内直连
+  - GEOIP,CN,🐼国内直连
   - GEOIP,private,DIRECT
 
 # 兜底规则
