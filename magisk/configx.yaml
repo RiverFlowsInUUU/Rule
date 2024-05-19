@@ -1,0 +1,183 @@
+mixed-port: 7890
+redir-port: 7891
+tproxy-port: 1536
+allow-lan: true
+mode: Rule
+geodata-mode: true
+unified-delay: true
+log-level: silent
+ipv6: true
+external-controller: 0.0.0.0:9090
+#面板默认Meta 可选Yacd 清除浏览器缓存即可重新加载
+external-ui: ./dashboard/Meta #Yacd
+secret: ""
+tcp-concurrent: true
+enable-process: true
+find-process-mode: strict
+global-client-fingerprint: chrome
+
+#####################
+#修改配置文件时，建议先停止模块服务，再进行保存.
+#####################
+
+geox-url:
+  geoip: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat"
+  geosite: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
+  mmdb: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/country.mmdb"
+
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+sniffer:
+  enable: true
+  sniff:
+    TLS:
+      ports: [443, 8443]
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+
+tun:
+  enable: false
+  device: tun0
+  stack: system
+  dns-hijack:
+    - 'any:53'
+    - 'tcp://any:53'
+  auto-route: true
+  auto-detect-interface: true
+  
+dns:
+  enable: true
+  prefer-h3: true
+  listen: 0.0.0.0:1053
+  ipv6: true
+  enhanced-mode: fake-ip
+  fake-ip-range: 28.0.0.1/8
+  fake-ip-filter:
+    - '*'
+    - '+.lan'
+    - 'connect.rom.miui.com'
+    - 'localhost.ptlogin2.qq.com'
+  nameserver:
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
+    
+  p: &p
+    {type: http, interval: 86400, health-check: {enable: true, url: https://www.gstatic.com/generate_204, interval: 300}}
+  u: &u
+    use:
+    - 🛫 机场1
+    - 🛫 机场2
+    - 🛫 机场3
+    - 🛫 机场4
+    - 🛫 机场5
+    - 🛫 机场6
+
+proxy-providers:
+  1.🛫 机场1:
+    <<: *p
+    url: "订阅地址1"
+    path: ./proxy_providers/subscribe1.yaml
+  
+  2.🛫 机场2:
+    <<: *p
+    url: "订阅地址2"
+    path: ./proxy_providers/subscribe2.yaml
+  3.🛫 机场1:
+    <<: *p
+    url: "订阅地址3"
+    path: ./proxy_providers/subscribe3.yaml
+  4.🛫 机场2:
+    <<: *p
+    url: "订阅地址4"
+    path: ./proxy_providers/subscribe4.yaml
+  5.🛫 机场1:
+    <<: *p
+    url: "订阅地址5"
+    path: ./proxy_providers/subscribe5.yaml
+  6.🛫 机场2:
+    <<: *p
+    url: "订阅地址6"
+    path: ./proxy_providers/subscribe6.yaml
+
+
+proxy-groups:
+  - {name: 🚀 Select, type: select, proxies: [♻️ Auto,🐼 CN], <<: *u}
+  - {name: ♻️ Auto, <<: *u, tolerance: 2, type: url-test}
+  - {name: 🌎 Select1, type: select, proxies: [🚀 Select,🐼 CN], <<: *u}
+  - {name: 🌎 Select2, type: select, proxies: [🚀 Select,🐼 CN], <<: *u}
+  - {name: 🌎 Select3, type: select, proxies: [🚀 Select,🐼 CN], <<: *u}
+  - {name: 🔯 Load balancing, <<: *u, type: load-balance, strategy: consistent-hashing, url: 'https://www.gstatic.com/generate_204', interval: 300, lazy: true}
+  - {name: 🛠 Fallback, <<: *u, type: fallback, url: 'https://www.gstatic.com/generate_204', interval: 300, lazy: true}
+  - {name: 🤖 OpenAI, type: select, proxies: [♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]}
+  - {name: 🤖 Copilot, type: select, proxies: [♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]}
+  - {name: 🎶 Spotify, type: select, proxies: [♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]}
+  - {name: Ⓜ️ Microsoft, type: select, proxies: [🐼 CN,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
+  - {name: ☁ Onedrive, type: select, proxies: [🐼 CN,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
+  - {name: 🔐 Google, type: select, proxies: [♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]}
+  - {name: 🐼 CN, type: select, proxies: [DIRECT]}
+  - {name: 🐋 Final, type: select, proxies: [🐼 CN]}
+
+rule-providers:
+  Microsoft:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule/Microsoft.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Microsoft.yaml"
+    interval: 86400
+  Onedrive:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule/Onedrive.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Onedrive.yaml"
+    interval: 86400
+  Copilot:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule/Copilot.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Copilot.yaml"
+    interval: 86400
+  Spotify:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule/Spotify.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Spotify.yaml"
+    interval: 86400
+  Openai:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule/Openai.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Openai.yaml"
+    interval: 86400
+  Google:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule/Google.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Google.yaml"
+    interval: 86400
+  Gemini:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule/Gemini.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Gemini.yaml"
+    interval: 86400  
+rules:
+  - RULE-SET,Bing,🤖 Copilot
+  - RULE-SET,Openai,🤖 OpenAI
+  - RULE-SET,Spotify,🎶 Spotify
+  - RULE-SET,Microsoft,Ⓜ️ Microsoft
+  - RULE-SET,Onedrive,☁ Onedrive
+  - RULE-SET,Google,🔐 Google
+  - GEOSITE,CN,🐼 CN
+  - GEOIP,private,🐼 CN,no-resolve
+  - GEOIP,CN,🐼 CN,no-resolve
+  - MATCH,🐋 Final
