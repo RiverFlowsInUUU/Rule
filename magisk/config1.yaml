@@ -1,70 +1,114 @@
-
 mixed-port: 7890
-redir-port: 7891
-tproxy-port: 1536
-allow-lan: true
-mode: Rule
-geodata-mode: true
-unified-delay: true
-log-level: silent
-ipv6: true
+redir-port: 9797
+tproxy-port: 9898
+mode: rule # 运行模式：rule 规则匹配；global 全局代理(需要在GLOBAL策略组选择代理/策略)；direct 全局直连
+find-process-mode: strict # 进程匹配模式：always 开启，强制匹配所有进程；；strict 默认，由 Clash 判断是否开启；off 不匹配进程，推荐在路由器上使用此模式
+global-client-fingerprint: random # 全局客户端指纹，可选："chrome", "firefox", "safari", "iOS", "android", "edge", "360"," qq", "random"；若选择 "random", 则按 Cloudflare Radar 数据按概率生成一个现代浏览器指纹。
+global-ua: clash.meta # 自定义外部资源下载时使用的UA,默认为 clash.meta
+log-level: error # 日志级别：silent 静默，不输出；error 仅输出发生错误至无法使用的日志；warning 输出发生错误但不影响运行的日志，以及 error 级别内容；info 输出一般运行的内容，以及 error 和 warning 级别的日志；debug 尽可能的输出运行中所有的信息
+allow-lan: true # 允许局域网内其他设备经过 Clash 的代理端口访问互联网，可选值 true/false
+bind-address: "*" # 绑定 IP, 通过 LAN 访问一个/一些特定的 IP 地址，"*" 绑定所有 IP 地址，默认值，不填写此项则绑定全部
+ipv6: false # 是否允许内核接受 IPv6 流量，可选值 true/false
+tcp-concurrent: true # tcp并发，允许同时处理多个tcp连接，可选值 true/false
+keep-alive-interval: 30 # TCP Keep Alive 间隔,单位分钟 | 控制 Clash 发出 TCP Keep Alive 包的间隔,减少移动设备耗电问题的临时措施
+unified-delay: true # 统一延迟，更换延迟计算方式,去除握手等额外延迟 可选值 true/false
 external-controller: 0.0.0.0:9090
-#面板默认Meta 可选Yacd 清除浏览器缓存即可重新加载
-external-ui: ./dashboard/Meta #Yacd
+external-ui: dashboard/metacubexd
 secret: ""
-tcp-concurrent: true
-enable-process: true
-find-process-mode: strict
-global-client-fingerprint: chrome
+external-ui-url: "https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip"
 
-#####################
-#修改配置文件时，建议先停止模块服务，再进行保存.
-#####################
+# GEO文件配置
+geodata-mode: true # GeoIP 使用的文件,可选 true 为.dat/ false 为.mmdb
+geosite-matcher: succinct # GeoSite 使用的匹配器实现，可选：succinct：与规则集相同；mph：来自 V2Ray，也是 Xray 中的“混合”
+geodata-loader: memconservative # GEO 文件加载模式：standard：标准加载器；memconservative：专为内存受限(小内存)设备优化的加载器(默认值)
+geo-auto-update: true # 自动更新 GEO 文件,可选 true/false
+geo-update-interval: 72 # 更新间隔,单位：小时
+geox-url: # 自定义 GEO 文件下载地址
+  geoip: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
+  geosite: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+  mmdb: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country.mmdb"
+  asn: "https://github.com/xishang0128/geoip/releases/download/latest/GeoLite2-ASN.mmdb"
 
-geox-url:
-  geoip: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat"
-  geosite: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
-  mmdb: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/country.mmdb"
+# 外部控制 (API)
+external-controller: 127.0.0.1:9090 # 外部控制器，可以使用 RESTful API 来控制你的 Clash 内核；API 监听地址，你可以将 127.0.0.1 修改为 0.0.0.0 来监听所有 IP；访问地址：http://127.0.0.1:9090
+secret: "ksc666" # API 的访问密钥
+external-ui: "./ui" # 外部用户界面路径，可以为绝对路径，或者 Clash 工作目录的相对路径
+external-ui-name: "metacubexd" # 自定义外部用户界面名字
+external-ui-url: "https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip" # 自定义外部用户界面下载地址
 
-profile:
-  store-selected: true
-  store-fake-ip: true
+profile: # 缓存
+  store-selected: true # 储存 API 对策略组的选择，以供下次启动时使用
+  store-fake-ip: true # 储存 fakeip 映射表，域名再次发生连接时，使用原有映射地址
 
-sniffer:
+sniffer: # 域名嗅器,通过读取握手包内的域名字段,将IP还原成域名,有效解决Mapping机制的短板
   enable: true
+  force-dns-mapping: true # 对 redir-host 类型识别的流量进行强制嗅探
+  parse-pure-ip: true # 对所有未获取到域名的流量进行强制嗅探
+  override-destination: true # 是否使用嗅探结果作为实际访问,默认为 true
   sniff:
-    TLS:
-      ports: [443, 8443]
     HTTP:
       ports: [80, 8080-8880]
-      override-destination: true
+      override-destination: true # 可覆盖 sniffer.override-destination
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+  force-domain: # 需要强制嗅探的域名（默认情况下只对IP进行嗅探）
+    - "+.v2ex.com"
+  skip-domain: # 需要跳过嗅探的域名。主要解决部分站点sni字段非域名，导致嗅探结果异常的问题，如米家设备
+    - "Mijia Cloud"
 
 tun:
-  enable: false
-  device: tun0
-  stack: system
-  dns-hijack:
-    - 'any:53'
-    - 'tcp://any:53'
-  auto-route: true
-  auto-detect-interface: true
-  
+  enable: false # 是否启用,可选 true/false
+  stack: mixed # tun 模式堆栈，如无使用问题，建议使用 mixed栈，默认 gvisor，可用值： system/gvisor/mixed
+  auto-route: true # 自动设置全局路由,可以自动将全局流量路由进入 tun 网卡
+  auto-detect-interface: true # 自动选择流量出口接口,多出口网卡同时连接的设备建议手动指定出口网卡
+  dns-hijack: # dns 劫持，将匹配到的连接导入内部 dns 模块，不书写协议则为 udp://
+    - "any:53"
+  device: Meta # 指定 tun 网卡名称,MacOS 设备只能使用 utun 开头的网卡名
+  mtu: 9000 # 最大传输单元，会影响极限状态下的速率，一般用户默认即可。
+  strict-route: false # 严格路由，所有连接路由到 tun 来防止泄漏,但设备将无法被其他设备访问
+  gso: true # 启用通用分段卸载,仅支持 Linux
+  gso-max-size: 65536 # 数据块的最大长度
+  udp-timeout: 300 # UDP NAT 过期时间,以秒为单位,默认为 300(5 分钟)
+  endpoint-independent-nat: false # 启用独立于端点的 NAT,性能可能会略有下降,所以不建议在不需要的时候开启
+  inet4-route-exclude-address: #启用 auto-route 时排除自定义网段
+    - 192.168.0.0/16
+  inet6-route-exclude-address: #启用 auto-route 时排除自定义网段
+    - fc00::/7
+
 dns:
   enable: true
-  prefer-h3: true
+  prefer-h3: true # 优先使用 DOH 的 http/3
   listen: 0.0.0.0:1053
   ipv6: true
+  ipv6-timeout: 300 # ipv6超时，单位 毫秒
+  cache-algorithm: arc # 缓存算法
+  use-hosts: true # 查询系统Hosts
+  default-nameserver: # 默认 DNS, 用于解析 DNS 服务器 的域名，必须为 IP, 可为加密 DNS
+    - 'https://1.12.12.12/dns-query'
+    - 'https://[2400:3200::1]/dns-query'
   enhanced-mode: fake-ip
-  fake-ip-range: 28.0.0.1/8
-  fake-ip-filter:
+  fake-ip-range: 198.18.0.0/16
+  fake-ip-filter: # fakeip 过滤，以下地址不会下发 fakeip 映射用于连接
     - '*'
     - '+.lan'
-    - 'connect.rom.miui.com'
-    - 'localhost.ptlogin2.qq.com'
-  nameserver:
-    - https://doh.pub/dns-query
-    - https://dns.alidns.com/dns-query
-    
+    - '+.local'
+  nameserver-policy: # 指定域名查询的解析服务器，优先于 nameserver/fallback 查询
+    "geosite:cn,private":
+      - 'https://1.12.12.12/dns-query'
+      - 'https://223.5.5.5/dns-query'
+      - 'https://[2400:3200::1]/dns-query'
+      - 'https://[2402:4e00::]/dns-query'
+  nameserver: # 默认的域名解析服务器，如不配置 fallback/proxy-server-nameserver , 则所有域名都由 nameserver 解析
+    - 'https://1.1.1.1/dns-query#🌍DNS解析'
+    - 'https://8.8.8.8/dns-query#🌍DNS解析'
+    - 'https://[2606:4700:4700::1111]/dns-query#🌍DNS解析'
+    - 'https://[2001:4860:4860::8888]/dns-query#🌍DNS解析'
+  proxy-server-nameserver: # 代理节点域名解析服务器，仅用于解析代理节点的域名
+    - 'https://1.1.1.1/dns-query#🌍DNS解析'
+    - 'https://8.8.8.8/dns-query#🌍DNS解析'
+
   p: &p
     {type: http, interval: 86400, health-check: {enable: true, url: https://www.gstatic.com/generate_204, interval: 300}}
   u: &u
@@ -104,49 +148,48 @@ rule-providers:
     type: http
     behavior: classical
     format: yaml
-    path: ./rule/Microsoft.yaml
+    path: ./rule_providers/Microsoft.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Microsoft.yaml"
     interval: 86400
   Onedrive:
     type: http
     behavior: classical
     format: yaml
-    path: ./rule/Onedrive.yaml
+    path: ./rule_providers/Onedrive.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Onedrive.yaml"
     interval: 86400
   Bing:
     type: http
     behavior: classical
     format: yaml
-    path: ./rule/Bing
+    path: ./rule_providers/Bing.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Bing.yaml"
     interval: 86400
   Spotify:
     type: http
     behavior: classical
     format: yaml
-    path: ./rule/Spotify
+    path: ./rule_providers/Spotify.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Spotify.yaml"
     interval: 86400
   Openai:
     type: http
     behavior: classical
     format: yaml
-    path: ./rule/Openai.yaml
+    path: ./rule_providers/Openai.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Openai.yaml"
     interval: 86400
   Google:
     type: http
     behavior: classical
     format: yaml
-    path: ./rule/Google.yaml
+    path: ./rule_providers/Google.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Google.yaml"
     interval: 86400
 rules:
   - RULE-SET,Bing,Ⓜ️ 微软Bing
   - RULE-SET,Openai,🤖 OpenAI
   - RULE-SET,Spotify,🎶 Spotify
-  #- GEOSITE,category-ads-all,🛑 广告拦截
   - RULE-SET,Microsoft,Ⓜ️ 微软服务
   - RULE-SET,Onedrive,Ⓜ️ 微软云盘
   - RULE-SET,Google,📢 谷歌服务
