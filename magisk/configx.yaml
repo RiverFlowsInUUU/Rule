@@ -1,183 +1,236 @@
+#如果修改了config.yaml并删除了userDirect，userProxy规则组，
+#或者修改了“中国网址”和“代理”策略组，
+#请把下面对应的nameserver-policy也删除，否则内核将无法启动。
+#Premium内核已经停更不建议使用，如果想要切换至P核，
+#请自行根据p核文档修改下面的配置，否则将无法启动。
+#----------------------------------------------
+redir-port: 9797
 mixed-port: 7890
-redir-port: 7891
-tproxy-port: 1536
+tproxy-port: 9898
+mode: rule
 allow-lan: true
-mode: Rule
-geodata-mode: true
-unified-delay: true
-log-level: silent
-ipv6: true
-external-controller: 0.0.0.0:9090
-#面板默认Meta 可选Yacd 清除浏览器缓存即可重新加载
-external-ui: ./dashboard/Meta #Yacd
-secret: ""
+bind-address: '*'
+unified-delay: false
 tcp-concurrent: true
 enable-process: true
 find-process-mode: strict
-global-client-fingerprint: chrome
-
-#####################
-#修改配置文件时，建议先停止模块服务，再进行保存.
-#####################
+log-level: info
+ipv6: false
+geodata-mode: true
+#interface-name: tun0   #出口网卡名称 可用来桥接VPN类软件
+#面板可选metacubexd/yacd 有需要请自行修改
+external-controller: 0.0.0.0:9090
+external-ui: dashboard/metacubexd
+secret: ""
+external-ui-url: "https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip"
 
 geox-url:
   geoip: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat"
   geosite: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
-  mmdb: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/country.mmdb"
+  mmdb: "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/Country.mmdb"
+geo-auto-update: true
+geo-update-interval: 48
 
 profile:
   store-selected: true
   store-fake-ip: true
 
 sniffer:
-  enable: true
+  enable: false
+  parse-pure-ip: true
+  override-destination: false
   sniff:
-    TLS:
-      ports: [443, 8443]
     HTTP:
       ports: [80, 8080-8880]
       override-destination: true
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+  skip-domain:
+    - "Mijia Cloud"
 
 tun:
   enable: false
-  device: tun0
+  device: utun
   stack: system
   dns-hijack:
-    - 'any:53'
-    - 'tcp://any:53'
-  auto-route: true
-  auto-detect-interface: true
-  
+    - any:53
+  auto-route: false
+  auto-detect-interface: false
+  strict-route: false
+
 dns:
   enable: true
-  prefer-h3: true
+  use-hosts: true
+  perfer-h3: false
+  ipv6-timeout: 300
   listen: 0.0.0.0:1053
-  ipv6: true
-  enhanced-mode: fake-ip
-  fake-ip-range: 28.0.0.1/8
+  enhanced-mode: redir-host
+  # redir-host / fake-ip 可切换，建议使用redir-host避免dns污染，泄露
+  fake-ip-range: 198.18.0.1/16
   fake-ip-filter:
-    - '*'
-    - '+.lan'
-    - 'connect.rom.miui.com'
-    - 'localhost.ptlogin2.qq.com'
-  nameserver:
-    - https://doh.pub/dns-query
-    - https://dns.alidns.com/dns-query
+    - "*"
+    - "+.lan"
+    - "+.local"
+    - "localhost.ptlogin2.qq.com"
+
+  nameserver-policy:
+    'rule-set:CustomDirect':
+      - "https://223.5.5.5/dns-query#🐼 CN"
+      - "https://120.53.53.53/dns-query#🐼 CN"
     
-  p: &p
+    'rule-set:Microsoft':
+      - "https://223.5.5.5/dns-query#🐼 CN"
+      - "https://120.53.53.53/dns-query#🐼 CN"
+
+    'rule-set:Onedrive':
+      - "https://223.5.5.5/dns-query#🐼 CN"
+      - "https://120.53.53.53/dns-query#🐼 CN"
+
+    'rule-set:Copilot': 
+      - "https://8.8.4.4/dns-query#🤖 Copilot"
+      - "https://1.0.0.1/dns-query#🤖 Copilot"
+
+    'rule-set:CustomProxy': 
+      - "https://8.8.4.4/dns-query#♻️ Auto"
+      - "https://1.0.0.1/dns-query#♻️ Auto"
+    
+    'rule-set:OpenAi': 
+      - "https://8.8.4.4/dns-query#🤖 OpenAi"
+      - "https://1.0.0.1/dns-query#🤖 OpenAi"
+
+    'rule-set:Spotify': 
+      - "https://8.8.4.4/dns-query#🎶 Spotify"
+      - "https://1.0.0.1/dns-query#🎶 Spotify"
+
+    'geosite:cn,private':
+      - "https://223.5.5.5/dns-query#🐼 CN"
+      - "https://120.53.53.53/dns-query#🐼 CN"
+  
+  nameserver:
+    - "https://8.8.4.4/dns-query#♻️ Auto"
+    - "https://1.0.0.1/dns-query#♻️ Auto"
+
+  proxy-server-nameserver:
+    - "https://223.5.5.5/dns-query#🐼 CN"
+    - "https://120.53.53.53/dns-query#🐼 CN"
+
+
+p: &p
     {type: http, interval: 86400, health-check: {enable: true, url: https://www.gstatic.com/generate_204, interval: 300}}
-  u: &u
-    use:
+u: &u 
+  type: url-test
+  use:
     - 🛫 机场1
     - 🛫 机场2
     - 🛫 机场3
     - 🛫 机场4
     - 🛫 机场5
     - 🛫 机场6
+  exclude-filter: "套餐|流量|群组|频道|官网|推荐使用|测试|电报" #排除满足关键词或正则表达式的节点
+  exclude-type: "http" #排除指定类型的节点，不支持正则表达式，通过 | 分割
 
 proxy-providers:
-  1.🛫 机场1:
-    <<: *p
-    url: "订阅地址1"
-    path: ./proxy_providers/subscribe1.yaml
-  
-  2.🛫 机场2:
-    <<: *p
-    url: "订阅地址2"
-    path: ./proxy_providers/subscribe2.yaml
-  3.🛫 机场1:
-    <<: *p
-    url: "订阅地址3"
-    path: ./proxy_providers/subscribe3.yaml
-  4.🛫 机场2:
-    <<: *p
-    url: "订阅地址4"
-    path: ./proxy_providers/subscribe4.yaml
-  5.🛫 机场1:
-    <<: *p
-    url: "订阅地址5"
-    path: ./proxy_providers/subscribe5.yaml
-  6.🛫 机场2:
-    <<: *p
-    url: "订阅地址6"
-    path: ./proxy_providers/subscribe6.yaml
+# 机场订阅
+# 需要修改机场名，订阅，存储目录
+# 别忘了同时修改 节点筛选部分的机场名
 
+  🛫 机场1: {<<: *p, url: "https://igdux.top/~Clash", path: ./机场/机场1.yaml, override: {additional-prefix: "机场1 | "}}
+  🛫 机场2: {<<: *p, url: "", path: ./机场/机场2.yaml, override: {additional-prefix: "机场2 | "}}
+  🛫 机场3: {<<: *p, url: "", path: ./机场/机场3.yaml, override: {additional-prefix: "机场3 | "}}
+  🛫 机场4: {<<: *p, url: "", path: ./机场/机场4.yaml, override: {additional-prefix: "机场4 | "}}
+  🛫 机场5: {<<: *p, url: "", path: ./机场/机场5.yaml, override: {additional-prefix: "机场5 | "}}
+  🛫 机场6: {<<: *p, url: "", path: ./机场/机场6.yaml, override: {additional-prefix: "机场6 | "}}
 
 proxy-groups:
-  - {name: 🚀 Select, type: select, proxies: [♻️ Auto,🐼 CN], <<: *u}
+  #- {name: 🚀 Select, type: select, proxies: [♻️ Auto,🐼 CN], <<: *u}
   - {name: ♻️ Auto, <<: *u, tolerance: 2, type: url-test}
-  - {name: 🌎 Select1, type: select, proxies: [🚀 Select,🐼 CN], <<: *u}
-  - {name: 🌎 Select2, type: select, proxies: [🚀 Select,🐼 CN], <<: *u}
-  - {name: 🌎 Select3, type: select, proxies: [🚀 Select,🐼 CN], <<: *u}
+  - {name: 🌎 Select1, type: select, <<: *u}
+  - {name: 🌎 Select2, type: select, <<: *u}
+  - {name: 🌎 Select3, type: select, <<: *u}
   - {name: 🔯 Load balancing, <<: *u, type: load-balance, strategy: consistent-hashing, url: 'https://www.gstatic.com/generate_204', interval: 300, lazy: true}
   - {name: 🛠 Fallback, <<: *u, type: fallback, url: 'https://www.gstatic.com/generate_204', interval: 300, lazy: true}
-  - {name: 🤖 OpenAI, type: select, proxies: [♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]}
+  - {name: 🤖 OpenAi, type: select, proxies: [♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]}
   - {name: 🤖 Copilot, type: select, proxies: [♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]}
+  - {name: 🤖 Gemini, type: select, proxies: [♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]} 
   - {name: 🎶 Spotify, type: select, proxies: [♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]}
   - {name: Ⓜ️ Microsoft, type: select, proxies: [🐼 CN,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
   - {name: ☁ Onedrive, type: select, proxies: [🐼 CN,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
   - {name: 🔐 Google, type: select, proxies: [♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]}
   - {name: 🐼 CN, type: select, proxies: [DIRECT]}
-  - {name: 🐋 Final, type: select, proxies: [🐼 CN]}
+  - {name: 🐋 Final, type: select, proxies: [♻️ Auto]}
 
 rule-providers:
   Microsoft:
     type: http
     behavior: classical
     format: yaml
-    path: ./rule/Microsoft.yaml
+    path: ./rule_providers/Microsoft.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Microsoft.yaml"
     interval: 86400
   Onedrive:
     type: http
     behavior: classical
     format: yaml
-    path: ./rule/Onedrive.yaml
+    path: ./rule_providers/Onedrive.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Onedrive.yaml"
     interval: 86400
   Copilot:
     type: http
     behavior: classical
     format: yaml
-    path: ./rule/Copilot.yaml
+    path: ./rule_providers/Copilot.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Copilot.yaml"
     interval: 86400
   Spotify:
     type: http
     behavior: classical
     format: yaml
-    path: ./rule/Spotify.yaml
+    path: ./rule_providers/Spotify.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Spotify.yaml"
     interval: 86400
-  Openai:
+  OpenAi:
     type: http
     behavior: classical
     format: yaml
-    path: ./rule/Openai.yaml
+    path: ./rule_providers/OpenAi.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Openai.yaml"
     interval: 86400
   Google:
     type: http
     behavior: classical
     format: yaml
-    path: ./rule/Google.yaml
+    path: ./rule_providers/Google.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Google.yaml"
     interval: 86400
   Gemini:
     type: http
     behavior: classical
     format: yaml
-    path: ./rule/Gemini.yaml
+    path: ./rule_providers/Gemini.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Gemini.yaml"
-    interval: 86400  
+    interval: 86400
+  CustomDirect:
+    type: file
+    behavior: classical
+    path: ./rule_providers/userDirect.yaml
+  
+  CustomProxy:
+    type: file
+    behavior: classical
+    path: ./rule_providers/userProxy.yaml
 rules:
-  - RULE-SET,Bing,🤖 Copilot
-  - RULE-SET,Openai,🤖 OpenAI
+  - RULE-SET,Copilot,🤖 Copilot
+  - RULE-SET,Gemini,🤖 Gemini
+  - RULE-SET,OpenAi,🤖 OpenAi
   - RULE-SET,Spotify,🎶 Spotify
   - RULE-SET,Microsoft,Ⓜ️ Microsoft
   - RULE-SET,Onedrive,☁ Onedrive
   - RULE-SET,Google,🔐 Google
+  - RULE-SET,CustomProxy,♻️ Auto
+  - RULE-SET,CustomDirect,🐼 CN
   - GEOSITE,CN,🐼 CN
-  - GEOIP,private,🐼 CN,no-resolve
-  - GEOIP,CN,🐼 CN,no-resolve
+  - GEOIP,private,🐼 CN
+  - GEOIP,CN,🐼 CN
   - MATCH,🐋 Final
