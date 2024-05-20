@@ -1,0 +1,104 @@
+p: &p
+    {type: http, interval: 86400, health-check: {enable: true, url: https://www.gstatic.com/generate_204, interval: 300}}
+u: &u 
+  type: url-test
+  use:
+    - 🛫 机场1
+    - 🛫 机场2
+    - 🛫 机场3
+    - 🛫 机场4
+    - 🛫 机场5
+    - 🛫 机场6
+  exclude-filter: "套餐|流量|群组|频道|官网|推荐使用|测试|电报" #排除满足关键词或正则表达式的节点
+  exclude-type: "http" #排除指定类型的节点，不支持正则表达式，通过 | 分割
+
+proxy-providers:
+# 机场订阅
+# 需要修改机场名，订阅，存储目录
+# 别忘了同时修改 节点筛选部分的机场名
+
+  🛫 机场1: {<<: *p, url: "https://igdux.top/~Clash", path: ./机场/机场1.yaml, override: {additional-prefix: "机场1 | "}}
+  🛫 机场2: {<<: *p, url: "", path: ./机场/机场2.yaml, override: {additional-prefix: "机场2 | "}}
+  🛫 机场3: {<<: *p, url: "", path: ./机场/机场3.yaml, override: {additional-prefix: "机场3 | "}}
+  🛫 机场4: {<<: *p, url: "", path: ./机场/机场4.yaml, override: {additional-prefix: "机场4 | "}}
+  🛫 机场5: {<<: *p, url: "", path: ./机场/机场5.yaml, override: {additional-prefix: "机场5 | "}}
+  🛫 机场6: {<<: *p, url: "", path: ./机场/机场6.yaml, override: {additional-prefix: "机场6 | "}}
+
+proxy-groups:
+  #- {name: 🚀 Select, type: select, proxies: [♻️ Auto,🐼 CN], <<: *u}
+  - {name: ♻️ Auto, <<: *u, tolerance: 2, type: url-test}
+  - {name: 🌎 Select1, type: select, <<: *u}
+  - {name: 🌎 Select2, type: select, <<: *u}
+  - {name: 🌎 Select3, type: select, <<: *u}
+  - {name: 🔯 Load balancing, <<: *u, type: load-balance, strategy: consistent-hashing, url: 'https://www.gstatic.com/generate_204', interval: 300, lazy: true}
+  - {name: 🛠 Fallback, <<: *u, type: fallback, url: 'https://www.gstatic.com/generate_204', interval: 300, lazy: true}
+  - {name: 🤖 OpenAI, type: select, proxies: [♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]}
+  - {name: 🤖 Copilot, type: select, proxies: [♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]}
+  - {name: 🎶 Spotify, type: select, proxies: [♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]}
+  - {name: Ⓜ️ Microsoft, type: select, proxies: [🐼 CN,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
+  - {name: ☁ Onedrive, type: select, proxies: [🐼 CN,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
+  - {name: 🔐 Google, type: select, proxies: [♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]}
+  - {name: 🐼 CN, type: select, proxies: [DIRECT]}
+  - {name: 🐋 Final, type: select, proxies: [♻️ Auto]}
+
+rule-providers:
+  Microsoft:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule/Microsoft.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Microsoft.yaml"
+    interval: 86400
+  Onedrive:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule/Onedrive.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Onedrive.yaml"
+    interval: 86400
+  Copilot:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule/Copilot.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Copilot.yaml"
+    interval: 86400
+  Spotify:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule/Spotify.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Spotify.yaml"
+    interval: 86400
+  Openai:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule/Openai.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Openai.yaml"
+    interval: 86400
+  Google:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule/Google.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Google.yaml"
+    interval: 86400
+  Gemini:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule/Gemini.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Gemini.yaml"
+    interval: 86400  
+rules:
+  - RULE-SET,Copilot,🤖 Copilot
+  - RULE-SET,Openai,🤖 OpenAI
+  - RULE-SET,Spotify,🎶 Spotify
+  - RULE-SET,Microsoft,Ⓜ️ Microsoft
+  - RULE-SET,Onedrive,☁ Onedrive
+  - RULE-SET,Google,🔐 Google
+  - GEOSITE,CN,🐼 CN
+  - GEOIP,private,🐼 CN
+  - GEOIP,CN,🐼 CN
+  - MATCH,🐋 Final
