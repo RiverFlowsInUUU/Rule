@@ -100,6 +100,10 @@ dns:
     'rule-set:Spotify': 
       - "https://8.8.4.4/dns-query#🎶 Spotify"
       - "https://1.0.0.1/dns-query#🎶 Spotify"
+  
+    'rule-set:Telegram': 
+      - "https://8.8.4.4/dns-query#📲 Telegram"
+      - "https://1.0.0.1/dns-query#📲 Telegram"
 
     'geosite:cn,private':
       - "https://223.5.5.5/dns-query#🐼 CN"
@@ -155,6 +159,7 @@ proxy-groups:
   - {name: Ⓜ️ Microsoft, type: select, proxies: [🐼 CN,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
   - {name: ☁ Onedrive, type: select, proxies: [🐼 CN,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
   - {name: 🔐 Google, type: select, proxies: [♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]}
+  - {name: 📲 Telegram, type: select, proxies: [♻️ Auto]}
   - {name: 🐼 CN, type: select, proxies: [DIRECT]}
   - {name: 🐋 Final, type: select, proxies: [♻️ Auto]}
 
@@ -208,6 +213,13 @@ rule-providers:
     path: ./rule_providers/Gemini.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Gemini.yaml"
     interval: 86400
+  Telegram:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule_providers/Telegram.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Telegram.yaml"
+    interval: 86400
   CustomDirect:
     type: file
     behavior: classical
@@ -218,6 +230,7 @@ rule-providers:
     behavior: classical
     path: ./rule_providers/userProxy.yaml
 rules:
+  - RULE-SET,Telegram,📲 Telegram
   - RULE-SET,Copilot,🤖 Copilot
   - RULE-SET,Gemini,🤖 Gemini
   - RULE-SET,OpenAi,🤖 OpenAi
