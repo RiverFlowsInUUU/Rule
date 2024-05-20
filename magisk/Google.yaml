@@ -64,6 +64,7 @@ payload:
   - DOMAIN-SUFFIX,youtubeeducation.com
   - DOMAIN-SUFFIX,youtubegaming.com
   - DOMAIN-SUFFIX,youtubekids.com
+  - DOMAIN,music.youtube.com
   - IP-CIDR,142.0.0.0/8,no-resolve
   - IP-CIDR,31.13.0.0/16,no-resolve
   - IP-CIDR,128.242.0.0/16,no-resolve
