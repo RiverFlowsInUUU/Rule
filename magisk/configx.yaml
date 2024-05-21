@@ -1,20 +1,15 @@
-#如果修改了config.yaml并删除了userDirect，userProxy规则组，
-#或者修改了“中国网址”和“代理”策略组，
-#请把下面对应的nameserver-policy也删除，否则内核将无法启动。
-#Premium内核已经停更不建议使用，如果想要切换至P核，
-#请自行根据p核文档修改下面的配置，否则将无法启动。
-#----------------------------------------------
 redir-port: 9797
 mixed-port: 7890
-tproxy-port: 9898
+tproxy-port: 0
 mode: rule
 allow-lan: true
 bind-address: '*'
-unified-delay: false
+global-ua: clash-verge/v1.6.0
+unified-delay: true
 tcp-concurrent: true
 enable-process: true
-find-process-mode: strict
-log-level: info
+find-process-mode: off
+log-level: error
 ipv6: false
 geodata-mode: true
 #interface-name: tun0   #出口网卡名称 可用来桥接VPN类软件
@@ -36,9 +31,9 @@ profile:
   store-fake-ip: true
 
 sniffer:
-  enable: false
+  enable: true
   parse-pure-ip: true
-  override-destination: false
+  override-destination: true
   sniff:
     HTTP:
       ports: [80, 8080-8880]
@@ -51,14 +46,14 @@ sniffer:
     - "Mijia Cloud"
 
 tun:
-  enable: false
+  enable: true
   device: utun
-  stack: system
+  stack: mixed
   dns-hijack:
     - any:53
-  auto-route: false
-  auto-detect-interface: false
-  strict-route: false
+  auto-route: true
+  auto-detect-interface: true
+  strict-route: true
 
 dns:
   enable: true
@@ -91,6 +86,10 @@ dns:
     'rule-set:Copilot': 
       - "https://8.8.4.4/dns-query#🤖 Copilot"
       - "https://1.0.0.1/dns-query#🤖 Copilot"
+   
+    'rule-set:Gemini': 
+      - "https://8.8.4.4/dns-query#🤖 Gemini"
+      - "https://1.0.0.1/dns-query#🤖 Gemini"
 
     'rule-set:CustomProxy': 
       - "https://8.8.4.4/dns-query#♻️ Auto"
@@ -100,10 +99,11 @@ dns:
       - "https://8.8.4.4/dns-query#🤖 OpenAi"
       - "https://1.0.0.1/dns-query#🤖 OpenAi"
 
-    'rule-set:Spotify': 
-      - "https://8.8.4.4/dns-query#🎶 Spotify"
-      - "https://1.0.0.1/dns-query#🎶 Spotify"
+    'rule-set:Google': 
+      - "https://8.8.4.4/dns-query#🚀 TopMode"
+      - "https://1.0.0.1/dns-query#🚀 TopMode"
 
+    
     'geosite:cn,private':
       - "https://223.5.5.5/dns-query#🐼 CN"
       - "https://120.53.53.53/dns-query#🐼 CN"
@@ -115,6 +115,8 @@ dns:
   proxy-server-nameserver:
     - "https://223.5.5.5/dns-query#🐼 CN"
     - "https://120.53.53.53/dns-query#🐼 CN"
+
+
 
 
 p: &p
@@ -130,21 +132,20 @@ u: &u
     - 🛫 机场6
   exclude-filter: "套餐|流量|群组|频道|官网|推荐使用|测试|电报" #排除满足关键词或正则表达式的节点
   exclude-type: "http" #排除指定类型的节点，不支持正则表达式，通过 | 分割
-
 proxy-providers:
 # 机场订阅
 # 需要修改机场名，订阅，存储目录
 # 别忘了同时修改 节点筛选部分的机场名
 
   🛫 机场1: {<<: *p, url: "https://igdux.top/~Clash", path: ./机场/机场1.yaml, override: {additional-prefix: "机场1 | "}}
-  🛫 机场2: {<<: *p, url: "", path: ./机场/机场2.yaml, override: {additional-prefix: "机场2 | "}}
-  🛫 机场3: {<<: *p, url: "", path: ./机场/机场3.yaml, override: {additional-prefix: "机场3 | "}}
-  🛫 机场4: {<<: *p, url: "", path: ./机场/机场4.yaml, override: {additional-prefix: "机场4 | "}}
-  🛫 机场5: {<<: *p, url: "", path: ./机场/机场5.yaml, override: {additional-prefix: "机场5 | "}}
-  🛫 机场6: {<<: *p, url: "", path: ./机场/机场6.yaml, override: {additional-prefix: "机场6 | "}}
+  🛫 机场2: {<<: *p, url: "订阅地址2", path: ./机场/机场2.yaml, override: {additional-prefix: "机场2 | "}}
+  🛫 机场3: {<<: *p, url: "订阅地址3", path: ./机场/机场3.yaml, override: {additional-prefix: "机场3 | "}}
+  🛫 机场4: {<<: *p, url: "订阅地址4", path: ./机场/机场4.yaml, override: {additional-prefix: "机场4 | "}}
+  🛫 机场5: {<<: *p, url: "订阅地址5", path: ./机场/机场5.yaml, override: {additional-prefix: "机场5 | "}}
+  🛫 机场6: {<<: *p, url: "订阅地址6", path: ./机场/机场6.yaml, override: {additional-prefix: "机场6 | "}}
 
 proxy-groups:
-  #- {name: 🚀 Select, type: select, proxies: [♻️ Auto,🐼 CN], <<: *u}
+  - {name: 🚀 TopMode, type: select, proxies: [♻️ Auto,🔯 Load balancing,🛠 Fallback,🐼 CN], <<: *u}
   - {name: ♻️ Auto, <<: *u, tolerance: 2, type: url-test}
   - {name: 🌎 Select1, type: select, <<: *u}
   - {name: 🌎 Select2, type: select, <<: *u}
@@ -157,9 +158,8 @@ proxy-groups:
   - {name: 🎶 Spotify, type: select, proxies: [♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]}
   - {name: Ⓜ️ Microsoft, type: select, proxies: [🐼 CN,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
   - {name: ☁ Onedrive, type: select, proxies: [🐼 CN,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
-  - {name: 🔐 Google, type: select, proxies: [♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]}
   - {name: 🐼 CN, type: select, proxies: [DIRECT]}
-  - {name: 🐋 Final, type: select, proxies: [♻️ Auto]}
+  - {name: 🐋 Final, type: select, proxies: [🚀 TopMode]}
 
 rule-providers:
   Microsoft:
@@ -183,13 +183,7 @@ rule-providers:
     path: ./rule_providers/Copilot.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Copilot.yaml"
     interval: 86400
-  Spotify:
-    type: http
-    behavior: classical
-    format: yaml
-    path: ./rule_providers/Spotify.yaml
-    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Spotify.yaml"
-    interval: 86400
+
   OpenAi:
     type: http
     behavior: classical
@@ -211,6 +205,7 @@ rule-providers:
     path: ./rule_providers/Gemini.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Gemini.yaml"
     interval: 86400
+
   CustomDirect:
     type: file
     behavior: classical
@@ -221,16 +216,20 @@ rule-providers:
     behavior: classical
     path: ./rule_providers/userProxy.yaml
 rules:
+  - GEOSITE,Telegram,🚀 TopMode
+  - GEOSITE,Github,🚀 TopMode
+  - GEOSITE,Spotify,🎶 Spotify
+  - GEOSITE,Twitter,🚀 TopMode
   - RULE-SET,Copilot,🤖 Copilot
   - RULE-SET,Gemini,🤖 Gemini
   - RULE-SET,OpenAi,🤖 OpenAi
-  - RULE-SET,Spotify,🎶 Spotify
   - RULE-SET,Microsoft,Ⓜ️ Microsoft
   - RULE-SET,Onedrive,☁ Onedrive
-  - RULE-SET,Google,🔐 Google
-  - RULE-SET,CustomProxy,♻️ Auto
+  - RULE-SET,Google,🚀 TopMode
+  - RULE-SET,CustomProxy,🚀 TopMode
   - RULE-SET,CustomDirect,🐼 CN
   - GEOSITE,CN,🐼 CN
   - GEOIP,private,🐼 CN
+  - GEOIP,Telegram,🚀 TopMode
   - GEOIP,CN,🐼 CN
   - MATCH,🐋 Final
