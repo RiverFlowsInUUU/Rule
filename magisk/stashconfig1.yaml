@@ -24,12 +24,9 @@ proxy-providers:
       url: http://cp.cloudflare.com/generate_204
 dns:
   enable: true
-  ipv6: true
+  ipv6: false
   listen: 0.0.0.0:53
-  default-nameserver:
-    - 119.29.29.29
-    - 223.5.5.5
-  enhanced-mode: fake-ip
+  enhanced-mode: redir-host
   fake-ip-range: 198.18.0.1/16
   fake-ip-filter:
     - '*.lan'
