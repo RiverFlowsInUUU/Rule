@@ -147,10 +147,10 @@ proxy-groups:
   - {name: 🌎 Select2, type: select, <<: *u}
   - {name: 🌎 Select3, type: select, <<: *u}
   - {name: 🛠 Fallback, <<: *u, type: fallback, url: 'https://www.gstatic.com/generate_204', interval: 300, lazy: true}
-  - {name: 🤖 OpenAi, type: select, proxies: [♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
-  - {name: 🤖 Copilot, type: select, proxies: [♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
-  - {name: 🤖 Gemini, type: select, proxies: [♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]} 
-  - {name: 🎶 Spotify, type: select, proxies: [♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]}
+  - {name: 🤖 OpenAi, type: select, proxies: [🚀 TopMode,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
+  - {name: 🤖 Copilot, type: select, proxies: [🚀 TopMode,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
+  - {name: 🤖 Gemini, type: select, proxies: [🚀 TopMode,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]} 
+  - {name: 🎶 Spotify, type: select, proxies: 🚀 TopMode,[♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]}
   - {name: Ⓜ️ Microsoft, type: select, proxies: [🐼 CN,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
   - {name: ☁ Onedrive, type: select, proxies: [🐼 CN,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
   - {name: 🔯 Load balancing, <<: *u, type: load-balance, strategy: consistent-hashing, url: 'https://www.gstatic.com/generate_204', interval: 300, lazy: true}
