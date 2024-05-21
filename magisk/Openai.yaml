@@ -4,7 +4,8 @@ payload:
   - DOMAIN-SUFFIX,challenges.cloudflare.com
   - DOMAIN-SUFFIX,openai.com
   - DOMAIN-SUFFIX,openaiapi-site.azureedge.net
-  - DOMAIN-SUFFIX,stripe.comDOMAIN-SUFFIX,openai.com
+  - DOMAIN-SUFFIX,stripe.com
+  - DOMAIN-SUFFIX,openai.com
   - DOMAIN-SUFFIX,openai.nooc.ink
   - DOMAIN-SUFFIX,cloudflare.com
   - DOMAIN-SUFFIX,compute-pipe.com
