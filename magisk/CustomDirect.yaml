@@ -1,0 +1,15 @@
+payload:
+  # 大师兄影视
+  - DOMAIN,sdk.alibaba.com.ailbaba.me
+  - DOMAIN,img.ffzypic.com
+  - DOMAIN,img.liangzipic.com
+  - DOMAIN,img.bfzypic.com
+  - DOMAIN,img.kuaikanzy.net
+  - DOMAIN,vip.imgffzy.com
+  - DOMAIN,vip.ffzyread.com
+  - DOMAIN,cdn.jsdelivr.net
+  - DOMAIN,image.maimn.com
+  - DOMAIN-keyword,bfzycdn.com
+  - DOMAIN-keyword,vip.kuaikan-cdn
+  - DOMAIN-keyword,vip.ffzy-play
+  - DOMAIN-keyword,vip.ffzy-online
