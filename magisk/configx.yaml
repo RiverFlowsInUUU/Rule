@@ -133,7 +133,7 @@ proxy-providers:
 # 需要修改机场名，订阅，存储目录
 # 别忘了同时修改 节点筛选部分的机场名
 
-  🛫 机场1: {<<: *p, url: "https://igdux.top/~Clash", path: ./机场/机场1.yaml, override: {additional-prefix: "机场1 | "}}
+  🛫 机场1: {<<: *p, url: "订阅地址1", path: ./机场/机场1.yaml, override: {additional-prefix: "机场1 | "}}
   🛫 机场2: {<<: *p, url: "订阅地址2", path: ./机场/机场2.yaml, override: {additional-prefix: "机场2 | "}}
   🛫 机场3: {<<: *p, url: "订阅地址3", path: ./机场/机场3.yaml, override: {additional-prefix: "机场3 | "}}
   🛫 机场4: {<<: *p, url: "订阅地址4", path: ./机场/机场4.yaml, override: {additional-prefix: "机场4 | "}}
@@ -150,11 +150,12 @@ proxy-groups:
   - {name: 🤖 OpenAi, type: select, proxies: [🚀 TopMode,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
   - {name: 🤖 Copilot, type: select, proxies: [🚀 TopMode,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
   - {name: 🤖 Gemini, type: select, proxies: [🚀 TopMode,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]} 
-  - {name: 🎶 Spotify, type: select, proxies: 🚀 TopMode,[♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]}
+  - {name: 🎶 Spotify, type: select, proxies: [🚀 TopMode,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]}
   - {name: Ⓜ️ Microsoft, type: select, proxies: [🐼 CN,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
   - {name: ☁ Onedrive, type: select, proxies: [🐼 CN,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
   - {name: 🔯 Load balancing, <<: *u, type: load-balance, strategy: consistent-hashing, url: 'https://www.gstatic.com/generate_204', interval: 300, lazy: true}
   - {name: 🐼 CN, type: select, proxies: [DIRECT]}
+  - {name: 🚫 AD, type: select, proxies: [REJECT]}
   - {name: 🐋 Final, type: select, proxies: [🚀 TopMode]}
 
 rule-providers:
@@ -211,7 +212,17 @@ rule-providers:
     type: file
     behavior: classical
     path: ./rule_providers/userProxy.yaml
+  
+  秋风广告规则:
+    type: http
+    behavior: domain
+    format: yaml
+    path: ./rule_providers/AWAvenue-Ads-Rule-Clash.yaml
+    url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Clash.yaml"
+    interval: 86400
+    
 rules:
+  - RULE-SET,秋风广告规则,🚫 AD
   - GEOSITE,Telegram,🚀 TopMode
   - GEOSITE,Github,🚀 TopMode
   - GEOSITE,Spotify,🎶 Spotify
