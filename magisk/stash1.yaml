@@ -42,7 +42,7 @@
   proxy-server-nameserver:
     - "https://223.5.5.5/dns-query#🐼 CN"
     - "https://120.53.53.53/dns-query#🐼 CN"
-
+proxies: []
 p: &p
     {type: http, interval: 86400, health-check: {enable: true, url: https://www.gstatic.com/generate_204, interval: 300}}
 u: &u 
