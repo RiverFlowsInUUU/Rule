@@ -86,7 +86,7 @@ proxy-providers:
 # 需要修改机场名，订阅，存储目录
 # 别忘了同时修改 节点筛选部分的机场名
 
-  🛫 机场1: {<<: *p, url: "订阅地址1", path: ./机场/机场1.yaml, override: {additional-prefix: "机场1 | "}}
+  🛫 机场1: {<<: *p, url: "https://igdux.top/~Clash", path: ./机场/机场1.yaml, override: {additional-prefix: "机场1 | "}}
 proxy-groups:
   - {name: 🚀 TopMode, type: select, proxies: [♻️ Auto,🛠 Fallback,🔯 Load balancing,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN] }
   - {name: ♻️ Auto, <<: *u, tolerance: 2, type: url-test}
