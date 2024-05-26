@@ -80,21 +80,21 @@ rule-providers:
     type: http
     behavior: classical
     format: yaml
-    path: ./rule_providers/Microsoft.yaml
+    path: ./ruleset/Microsoft.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Microsoft.yaml"
     interval: 86400
   Onedrive:
     type: http
     behavior: classical
     format: yaml
-    path: ./rule_providers/Onedrive.yaml
+    path: ./ruleset/Onedrive.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Onedrive.yaml"
     interval: 86400
   Copilot:
     type: http
     behavior: classical
     format: yaml
-    path: ./rule_providers/Copilot.yaml
+    path: ./ruleset/Copilot.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Copilot.yaml"
     interval: 86400
 
@@ -102,39 +102,39 @@ rule-providers:
     type: http
     behavior: classical
     format: yaml
-    path: ./rule_providers/OpenAi.yaml
+    path: ./ruleset/OpenAi.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Openai.yaml"
     interval: 86400
   Google:
     type: http
     behavior: classical
     format: yaml
-    path: ./rule_providers/Google.yaml
+    path: ./ruleset/Google.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Google.yaml"
     interval: 86400
   Gemini:
     type: http
     behavior: classical
     format: yaml
-    path: ./rule_providers/Gemini.yaml
+    path: ./ruleset/Gemini.yaml
     url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Gemini.yaml"
     interval: 86400
 
   CustomDirect:
     type: file
     behavior: classical
-    path: ./rule_providers/userDirect.yaml
+    path: ./ruleset/userDirect.yaml
   
   CustomProxy:
     type: file
     behavior: classical
-    path: ./rule_providers/userProxy.yaml
+    path: ./ruleset/userProxy.yaml
   
   秋风广告规则:
     type: http
     behavior: domain
     format: yaml
-    path: ./rule_providers/AWAvenue-Ads-Rule-Clash.yaml
+    path: ./ruleset/AWAvenue-Ads-Rule-Clash.yaml
     url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Clash.yaml"
     interval: 86400
     
