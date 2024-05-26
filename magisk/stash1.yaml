@@ -1,0 +1,159 @@
+  nameserver-policy:
+    'rule-set:CustomDirect':
+      - "https://223.5.5.5/dns-query#🐼 CN"
+      - "https://120.53.53.53/dns-query#🐼 CN"
+    
+    'rule-set:Microsoft':
+      - "https://223.5.5.5/dns-query#🐼 CN"
+      - "https://120.53.53.53/dns-query#🐼 CN"
+
+    'rule-set:Onedrive':
+      - "https://223.5.5.5/dns-query#🐼 CN"
+      - "https://120.53.53.53/dns-query#🐼 CN"
+
+    'rule-set:Copilot': 
+      - "https://8.8.4.4/dns-query#🤖 Copilot"
+      - "https://1.0.0.1/dns-query#🤖 Copilot"
+   
+    'rule-set:Gemini': 
+      - "https://8.8.4.4/dns-query#🤖 Gemini"
+      - "https://1.0.0.1/dns-query#🤖 Gemini"
+
+    'rule-set:CustomProxy': 
+      - "https://8.8.4.4/dns-query#♻️ Auto"
+      - "https://1.0.0.1/dns-query#♻️ Auto"
+    
+    'rule-set:OpenAi': 
+      - "https://8.8.4.4/dns-query#🤖 OpenAi"
+      - "https://1.0.0.1/dns-query#🤖 OpenAi"
+
+    'rule-set:Google': 
+      - "https://8.8.4.4/dns-query#🚀 TopMode"
+      - "https://1.0.0.1/dns-query#🚀 TopMode"
+
+    'geosite:cn,private':
+      - "https://223.5.5.5/dns-query#🐼 CN"
+      - "https://120.53.53.53/dns-query#🐼 CN"
+  
+  nameserver:
+    - "https://8.8.4.4/dns-query#♻️ Auto"
+    - "https://1.0.0.1/dns-query#♻️ Auto"
+
+  proxy-server-nameserver:
+    - "https://223.5.5.5/dns-query#🐼 CN"
+    - "https://120.53.53.53/dns-query#🐼 CN"
+
+p: &p
+    {type: http, interval: 86400, health-check: {enable: true, url: https://www.gstatic.com/generate_204, interval: 300}}
+u: &u 
+  type: url-test
+  use:
+    - 🛫 机场1
+  exclude-filter: "套餐|流量|群组|频道|官网|推荐使用|测试|电报" #排除满足关键词或正则表达式的节点
+  exclude-type: "http" #排除指定类型的节点，不支持正则表达式，通过 | 分割
+proxy-providers:
+# 机场订阅
+# 需要修改机场名，订阅，存储目录
+# 别忘了同时修改 节点筛选部分的机场名
+
+  🛫 机场1: {<<: *p, url: "订阅地址1", path: ./机场/机场1.yaml, override: {additional-prefix: "机场1 | "}}
+proxy-groups:
+  - {name: 🚀 TopMode, type: select, proxies: [♻️ Auto,🛠 Fallback,🔯 Load balancing,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN] }
+  - {name: ♻️ Auto, <<: *u, tolerance: 2, type: url-test}
+  - {name: 🌎 Select1, type: select, <<: *u}
+  - {name: 🌎 Select2, type: select, <<: *u}
+  - {name: 🌎 Select3, type: select, <<: *u}
+  - {name: 🛠 Fallback, <<: *u, type: fallback, url: 'https://www.gstatic.com/generate_204', interval: 300, lazy: true}
+  - {name: 🤖 OpenAi, type: select, proxies: [🚀 TopMode,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
+  - {name: 🤖 Copilot, type: select, proxies: [🚀 TopMode,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
+  - {name: 🤖 Gemini, type: select, proxies: [🚀 TopMode,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]} 
+  - {name: 🎶 Spotify, type: select, proxies: [🚀 TopMode,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3,🐼 CN]}
+  - {name: Ⓜ️ Microsoft, type: select, proxies: [🐼 CN,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
+  - {name: ☁ Onedrive, type: select, proxies: [🐼 CN,♻️ Auto,🌎 Select1,🌎 Select2,🌎 Select3]}
+  - {name: 🔯 Load balancing, <<: *u, type: load-balance, strategy: consistent-hashing, url: 'https://www.gstatic.com/generate_204', interval: 300, lazy: true}
+  - {name: 🐼 CN, type: select, proxies: [DIRECT]}
+  - {name: 🚫 AD, type: select, proxies: [REJECT]}
+  - {name: 🐋 Final, type: select, proxies: [🚀 TopMode]}
+
+rule-providers:
+  Microsoft:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule_providers/Microsoft.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Microsoft.yaml"
+    interval: 86400
+  Onedrive:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule_providers/Onedrive.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Onedrive.yaml"
+    interval: 86400
+  Copilot:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule_providers/Copilot.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Copilot.yaml"
+    interval: 86400
+
+  OpenAi:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule_providers/OpenAi.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Openai.yaml"
+    interval: 86400
+  Google:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule_providers/Google.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Google.yaml"
+    interval: 86400
+  Gemini:
+    type: http
+    behavior: classical
+    format: yaml
+    path: ./rule_providers/Gemini.yaml
+    url: "https://raw.githubusercontent.com/RiverFlowsInUUU/Rule/main/magisk/Gemini.yaml"
+    interval: 86400
+
+  CustomDirect:
+    type: file
+    behavior: classical
+    path: ./rule_providers/userDirect.yaml
+  
+  CustomProxy:
+    type: file
+    behavior: classical
+    path: ./rule_providers/userProxy.yaml
+  
+  秋风广告规则:
+    type: http
+    behavior: domain
+    format: yaml
+    path: ./rule_providers/AWAvenue-Ads-Rule-Clash.yaml
+    url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Clash.yaml"
+    interval: 86400
+    
+rules:
+  - RULE-SET,秋风广告规则,🚫 AD
+  - GEOSITE,Telegram,🚀 TopMode
+  - GEOSITE,Github,🚀 TopMode
+  - GEOSITE,Spotify,🎶 Spotify
+  - GEOSITE,Twitter,🚀 TopMode
+  - RULE-SET,Copilot,🤖 Copilot
+  - RULE-SET,Gemini,🤖 Gemini
+  - RULE-SET,OpenAi,🤖 OpenAi
+  - RULE-SET,Microsoft,Ⓜ️ Microsoft
+  - RULE-SET,Onedrive,☁ Onedrive
+  - RULE-SET,Google,🚀 TopMode
+  - RULE-SET,CustomProxy,🚀 TopMode
+  - RULE-SET,CustomDirect,🐼 CN
+  - GEOSITE,CN,🐼 CN
+  - GEOIP,private,🐼 CN
+  - GEOIP,Telegram,🚀 TopMode
+  - GEOIP,CN,🐼 CN
+  - MATCH,🐋 Final
