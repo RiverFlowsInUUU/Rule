@@ -8,6 +8,7 @@ payload:
   - DOMAIN,vip.imgffzy.com
   - DOMAIN,vip.ffzyread.com
   - DOMAIN,cdn.jsdelivr.net
+  - DOMAIN,api.nivod.tv
   - DOMAIN,image.maimn.com
   - DOMAIN-keyword,bfzycdn.com
   - DOMAIN-keyword,vip.kuaikan-cdn
