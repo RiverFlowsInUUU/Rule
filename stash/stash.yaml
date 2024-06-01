@@ -122,9 +122,9 @@ rules:
   - GEOSITE,Onedrive,☁ Onedrive
   - GEOSITE,Google,🚀 TopMode
   - GEOSITE,CN,🐼 CN
-  - GEOIP,private,🐼 CN
-  - GEOIP,Telegram,🚀 TopMode
-  - GEOIP,Twitter,🚀 TopMode
-  - GEOIP,Google,🚀 TopMode 
-  - GEOIP,CN,🐼 CN
+  - GEOIP,private,🐼 CN,no-resolve
+  - GEOIP,Telegram,🚀 TopMode,no-resolve
+  - GEOIP,Twitter,🚀 TopMode,no-resolve
+  - GEOIP,Google,🚀 TopMode ,no-resolve
+  - GEOIP,CN,🐼 CN,no-resolve
   - MATCH,🐋 Final
