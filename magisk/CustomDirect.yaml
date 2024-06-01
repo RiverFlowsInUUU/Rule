@@ -14,3 +14,5 @@ payload:
   - DOMAIN-keyword,vip.kuaikan-cdn
   - DOMAIN-keyword,vip.ffzy-play
   - DOMAIN-keyword,vip.ffzy-online
+  #apple
+  - DOMAIN,events-delivery.apple.com
