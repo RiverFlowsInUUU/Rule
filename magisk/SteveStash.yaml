@@ -54,13 +54,6 @@ proxy-groups:
     type: select
     proxies:
       - 自动选择
-      - 香港节点
-      - 台湾节点
-      - 狮城节点
-      - 日本节点
-      - 美国节点
-      - 英国节点
-      - 其他节点
       - 手动切换
       - DIRECT
     icon: https://github.com/shindgewongxj/WHATSINStash/raw/main/icon/%24tash.png
@@ -84,11 +77,6 @@ proxy-groups:
     proxies:
       - 节点选择
       - 自动选择
-      - 狮城节点
-      - 香港节点
-      - 台湾节点
-      - 日本节点
-      - 美国节点
       - 手动切换
       - DIRECT
     icon: https://raw.githubusercontent.com/Semporia/Hand-Painted-icon/master/Social_Media/Telegram.png
@@ -97,11 +85,6 @@ proxy-groups:
     proxies:
       - 节点选择
       - 自动选择
-      - 狮城节点
-      - 香港节点
-      - 台湾节点
-      - 日本节点
-      - 美国节点
       - 手动切换
       - DIRECT
     icon: https://github.com/shindgewongxj/WHATSINStash/raw/main/icon/openai.png
@@ -110,11 +93,6 @@ proxy-groups:
     proxies:
       - 节点选择
       - 自动选择
-      - 狮城节点
-      - 香港节点
-      - 台湾节点
-      - 日本节点
-      - 美国节点
       - 手动切换
       - DIRECT
     icon: https://raw.githubusercontent.com/Semporia/Hand-Painted-icon/master/Google_Suite/YouTube.png
@@ -123,11 +101,6 @@ proxy-groups:
     proxies:
       - 节点选择
       - 自动选择
-      - 狮城节点
-      - 香港节点
-      - 台湾节点
-      - 日本节点
-      - 美国节点
       - 手动切换
       - DIRECT
     icon: https://raw.githubusercontent.com/Semporia/Hand-Painted-icon/master/Universal/Netflix.png
@@ -135,19 +108,12 @@ proxy-groups:
     type: select
     proxies:
       - 全球直连
-      - 台湾节点
-      - 香港节点
     icon: https://github.com/shindgewongxj/WHATSINStash/raw/main/icon/bilibilitv.png
   - name: 国外媒体
     type: select
     proxies:
       - 节点选择
       - 自动选择
-      - 香港节点
-      - 台湾节点
-      - 狮城节点
-      - 日本节点
-      - 美国节点
       - 手动切换
       - DIRECT
     icon: https://raw.githubusercontent.com/Semporia/Hand-Painted-icon/master/Social_Media/Diaspora.png
@@ -155,9 +121,6 @@ proxy-groups:
     type: select
     proxies:
       - DIRECT
-      - 香港节点
-      - 台湾节点
-      - 狮城节点
       - 日本节点
       - 手动切换
     icon: https://raw.githubusercontent.com/Semporia/Hand-Painted-icon/master/Universal/TencentVideo.png
@@ -166,12 +129,6 @@ proxy-groups:
     proxies:
       - 节点选择
       - 自动选择
-      - 香港节点
-      - 台湾节点
-      - 狮城节点
-      - 日本节点
-      - 美国节点
-      - 其他节点
       - 手动切换
     icon: https://raw.githubusercontent.com/Semporia/Hand-Painted-icon/master/Social_Media/Instagram.png
   - name: Twitter
@@ -179,32 +136,18 @@ proxy-groups:
     proxies:
       - 节点选择
       - 自动选择
-      - 香港节点
-      - 台湾节点
-      - 狮城节点
-      - 日本节点
-      - 美国节点
       - 手动切换
     icon: https://raw.githubusercontent.com/Semporia/Hand-Painted-icon/master/Social_Media/Twitter.png
   - icon: https://raw.githubusercontent.com/Semporia/Hand-Painted-icon/master/Social_Media/TikTok.png
     name: TikTok
     proxies:
       - 节点选择
-      - 日本节点
-      - 美国节点
-      - 台湾节点
-      - 狮城节点
     type: select
   - name: 谷歌FCM
     type: select
     proxies:
       - DIRECT
       - 节点选择
-      - 美国节点
-      - 香港节点
-      - 台湾节点
-      - 狮城节点
-      - 日本节点
       - 手动切换
     icon: https://raw.githubusercontent.com/Semporia/Hand-Painted-icon/master/Google_Suite/Google.png
   - name: WeChat
@@ -279,56 +222,8 @@ proxy-groups:
       - 节点选择
       - 自动选择
       - DIRECT
-      - 香港节点
-      - 台湾节点
-      - 狮城节点
-      - 日本节点
-      - 美国节点
-      - 英国节点
       - 手动切换
     icon: https://github.com/shindgewongxj/WHATSINStash/raw/main/icon/betahub.png
-  - name: 香港节点
-    type: select
-    proxies: null
-    use: [SF]
-    filter: 港|🇭🇰|香港|HK|Hong
-    icon: https://raw.githubusercontent.com/Semporia/Hand-Painted-icon/master/Rounded_Rectangle/Hong_Kong.png
-  - name: 日本节点
-    type: select
-    proxies: null
-    filter: 日|🇯🇵|日本|JP|Japan
-    use: [SF]
-    icon: https://raw.githubusercontent.com/Semporia/Hand-Painted-icon/master/Rounded_Rectangle/Japan.png
-  - name: 美国节点
-    type: select
-    proxies: null
-    filter: 美|🇺🇸|美国|US|States|American
-    use: [SF]
-    icon: https://raw.githubusercontent.com/Semporia/Hand-Painted-icon/master/Rounded_Rectangle/United_States.png
-  - name: 台湾节点
-    type: select
-    proxies: null
-    filter: 台|🇨🇳|台湾|TW|Tai
-    use: [SF]
-    icon: https://raw.githubusercontent.com/Semporia/Hand-Painted-icon/master/Rounded_Rectangle/Taiwan.png
-  - name: 狮城节点
-    type: select
-    proxies: null
-    filter: 坡|🇸🇬|新加坡|狮城|SG|Singapore
-    use: [SF]
-    icon: https://raw.githubusercontent.com/Semporia/Hand-Painted-icon/master/Rounded_Rectangle/Singapore.png
-  - name: 英国节点
-    type: select
-    proxies: null
-    filter: 🇬🇧|英国|英|英格兰|UK|United Kingdom
-    use: [SF]
-    icon: https://raw.githubusercontent.com/Semporia/Hand-Painted-icon/master/Rounded_Rectangle/United_Kingdom.png
-  - name: 其他节点
-    type: select
-    proxies: null
-    filter: ^((?!套餐|到期|余额|剩余|流量|官网|🇭🇰|港|HK|Hong|🇹🇼|台|TW|Tai|🇯🇵|日|JP|Japan|🇸🇬|坡|狮城|SG|Singapore|🇰🇷|韩|KR|KOR|Korea|🇺🇸|美|US|States|American|🇬🇧|英国|英|英格兰|UK|United Kingdom).)*$
-    icon: https://raw.githubusercontent.com/Semporia/Hand-Painted-icon/master/Rounded_Rectangle/Turkey.png
-    use: [SF]
 rule-providers:
   # 远程规则集
   Apple:
