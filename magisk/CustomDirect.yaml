@@ -16,3 +16,4 @@ payload:
   - DOMAIN-keyword,vip.ffzy-online
   #apple
   - DOMAIN,events-delivery.apple.com
+  - DOMAIN,us-c.viayoo.com
