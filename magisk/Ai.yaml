@@ -24,8 +24,9 @@ payload:
   - DOMAIN,o33249.ingest.sentry.io
   - DOMAIN,openaiapi-site.azureedge.net
   - DOMAIN,sfo3.turn.livekit.cloud
-  - DOMAIN-KEYWORD,openaicom 
-  
+  - DOMAIN-KEYWORD,openaicom
+  - DOMAIN-KEYWORD,chatgpt
+  - DOMAIN,chatgpt-async-webps-prod-centralus-0.webpubsub.azure.com  
   # Copilot
   - DOMAIN,api.msn.com
   - DOMAIN,api.statsig.com
