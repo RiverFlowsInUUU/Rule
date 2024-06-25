@@ -21,12 +21,12 @@ payload:
   - DOMAIN,api.statsig.com
   - DOMAIN,api-iam.intercom.io
   - DOMAIN,chatgpt.livekit.cloud
-  - DOMAIN,o33249.ingest.sentry.io
   - DOMAIN,openaiapi-site.azureedge.net
   - DOMAIN,sfo3.turn.livekit.cloud
   - DOMAIN-KEYWORD,openaicom
   - DOMAIN-KEYWORD,chatgpt
   - DOMAIN,chatgpt-async-webps-prod-centralus-0.webpubsub.azure.com  
+  - DOMAIN,chatgpt-async-webps-prod-southcentralus-0.webpubsub.azure.com
   # Copilot
   - DOMAIN,api.msn.com
   - DOMAIN,api.statsig.com
