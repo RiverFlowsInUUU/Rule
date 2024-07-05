@@ -1,8 +1,5 @@
 #include youtube
 payload:
-  - DOMAIN-SUFFIX,xn--ngstr-lra8j.com
-  - DOMAIN-SUFFIX,google-analytics.com
-  - DOMAIN-SUFFIX,services.googleapis.cn
   - DOMAIN-SUFFIX,265.com
   - DOMAIN-SUFFIX,2mdn.net
   - DOMAIN-SUFFIX,google.com
