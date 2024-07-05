@@ -4,3 +4,5 @@ payload:
    - DOMAIN,connectivitycheck.gstatic.com
    - DOMAIN-SUFFIX,android.clients.google.com
    - DOMAIN-SUFFIX,google-analytics.com
+   - DOMAIN-SUFFIX,rr5---sn-a5mekn6d.xn--ngstr-lra8j.com
+   - DOMAIN-SUFFIX,rr8---sn-ni57rn7e.googlevideo.com
