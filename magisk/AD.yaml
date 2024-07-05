@@ -1,0 +1,5 @@
+payload:
+  # 2024-05-14 23:38:47 https://gitlab.com/lodepuly/vpn_tool/-/raw/master/Tool/Clash/Rule/AI.yaml
+  # ChatGPT
+
+  - DOMAIN-SUFFIX,sentry.io
