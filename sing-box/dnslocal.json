@@ -1,82 +1,50 @@
 {
-  "log": {
-    "level": "info",
-    "output": "sing-box.log",
-    "timestamp": true
-  },
   "dns": {
     "servers": [
       {
-        "tag": "alidns",
-        "address": "https://dns.alidns.com/dns-query",
-        "address_resolver": "dns-direct",
-        "address_strategy": "prefer_ipv4",
-        "strategy": "ipv4_only",
-        "detour": "direct"
+        "tag": "google",
+        "address": "tls://8.8.8.8"
       },
       {
-        "tag": "cf",
-       "address": "https://dns.google/dns-query",
-        "address_resolver": "dns-direct",
-        "strategy": "ipv4_only",
-        "detour": "proxy"
-      },
-   {
-        "tag": "dns-direct",
-        "address": "local",
-        "address_resolver": "dns-local",
-        "strategy": "ipv4_only",
+        "tag": "local",
+        "address": "223.5.5.5",
         "detour": "direct"
       }
     ],
     "rules": [
       {
-        "domain": "myChinaDnsSite.com",
-        "domain_suffix": ".cn",
-        "geosite": "cn",
-        "server": "alidns"
+        "outbound": "any",
+        "server": "local"
       }
-    ],
-    "final": "cf",
-    "strategy": "ipv4_only"
+    ]
   },
   "inbounds": [
     {
       "type": "tun",
-      "tag": "tun-in",
-      "interface_name": "utun",
-      "mtu": 9000,
       "inet4_address": "172.19.0.1/30",
+      "inet6_address": "fdfe:dcba:9876::1/126",
       "auto_route": true,
-      "strict_route": true,
-      "udp_timeout": "5m0s",
-      "stack": "gvisor",
-      "sniff": true,
-      "sniff_timeout": "300ms"
+      "strict_route": false
     }
   ],
   "outbounds": [
-    {
-      "type": "vless",
-      "tag": "proxy",
-      "server": "8.217.21.92",
-      "server_port": 56231,
-      "uuid": "5fe3dcc7-7221-4961-8aeb-9c404ca20a27",
-      "flow": "xtls-rprx-vision",
+
+{
+      "type": "trojan",
+      "tag": "松鼠 § 0",
+      "server": "kakuna.superpokemon.com",
+      "server_port": 28337,
+      "password": "2AYScS6pC0ap3lNxwZO3zBXI9xwZO3zBXI9CyEaADKn8FY4RjOCg3a538DSTRFY4RjOCg",
       "tls": {
         "enabled": true,
-        "server_name": "www.icloud.com",
+        "server_name": "kakuna.superpokemon.com",
         "utls": {
           "enabled": true,
           "fingerprint": "chrome"
-        },
-        "reality": {
-          "enabled": true,
-          "public_key": "g1f1wLjim5gOVGnI5LGUV0dL4iFXPoiepOPZfSxJe14"
         }
-      },
-      "packet_encoding": "xudp"
+      }
     },
+
     {
       "type": "direct",
       "tag": "direct"
@@ -87,44 +55,18 @@
     }
   ],
   "route": {
-    "geoip": {
-      "path": "geoip.db",
-      "download_url": "https://github.com/SagerNet/sing-geoip/releases/latest/download/geoip.db",
-      "download_detour": "direct"
-    },
-    "geosite": {
-      "path": "geosite.db",
-      "download_url": "https://github.com/SagerNet/sing-geosite/releases/latest/download/geosite.db",
-      "download_detour": "direct"
-    },
     "rules": [
       {
         "protocol": "dns",
         "outbound": "dns-out"
       },
       {
-        "domain": "myProxy.com",
-        "outbound": "proxy"
-      },
-      {
-        "domain": "myDirect.com",
-        "outbound": "direct"
-      },
-      {
-        "domain_suffix": ".cn",
-        "geosite": [
-          "cn",
-          "private"
-        ],
         "geoip": [
-          "cn",
           "private"
         ],
         "outbound": "direct"
       }
     ],
-    "final": "proxy",
     "auto_detect_interface": true
-  },
-  "experimental": {}
+  }
 }
