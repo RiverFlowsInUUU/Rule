@@ -1,0 +1,164 @@
+mixed-port: 7890
+ipv6: true
+allow-lan: true
+unified-delay: true
+tcp-concurrent: true
+find-process-mode: strict
+global-client-fingerprint: chrome
+
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+sniffer:
+  enable: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+
+tun:
+  enable: true
+  stack: mixed
+  dns-hijack:
+    - "any:53"
+    - "tcp://any:53"
+  auto-route: true
+  auto-redirect: true
+  auto-detect-interface: true
+
+dns:
+  enable: true
+  ipv6: true
+  respect-rules: true
+  enhanced-mode: fake-ip
+  fake-ip-filter:
+    - "*"
+    - "+.lan"
+    - "+.local"
+    - "+.market.xiaomi.com"
+  nameserver:
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
+  fallback:
+    - https://dns.google/dns-query
+    - https://dns.cloudflare.com/dns-query
+  proxy-server-nameserver:
+    - https://doh.18bit.cn/dns-query
+    - https://dns-cdn.trli.club/doh/dns
+  nameserver-policy:
+    "geosite:cn,private":
+      - 'https://doh.apad.pro/dns-query'
+      - 'https://dns-cdn.trli.club/doh/ad-dns-pro'
+    "geosite:!cn,google":
+      - 'https://doh.dns.sb/dns-query'
+      - 'https://dns.adguard-dns.com/dns-query'
+
+proxy-providers:
+  BaiPiao:
+    type: http
+    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/thuhollow2/myconfig/main/Clash.Meta/clashmconfig_a.yaml"
+    path: ./BaiPiao1.yaml
+    interval: 3600
+    exclude-filter: 官网|套餐|剩余|重置|以下|禁止|境外|境内|校园|TG|群|换|区
+    exclude-type: http|socks5
+    header:
+      User-Agent:
+      - "Clash.Meta"
+    health-check:
+      enable: true
+      url: 'http://cp.cloudflare.com'
+      interval: 300
+      lazy: true
+
+proxy-groups:
+  - name: 🇺🇳 OVERSEAS
+    type: select
+    proxies:
+      - 🌐 AUTO
+      - 🔮 LOAD
+      - REJECT
+      - DIRECT
+      - 🇭🇰 HK
+      - 🇹🇼 TW
+      - 🇸🇬 SG
+      - 🇰🇷 KR
+      - 🇯🇵 JP
+      - 🇺🇸 US
+
+  - name: 🌐 AUTO
+    type: url-test
+    filter: 香港|台湾|韩国|日本|狮城|美国|新加坡|🇭🇰|🇹🇼|🇸🇬|🇰🇷|🇯🇵|🇺🇸
+    use:
+      - BaiPiao
+
+  - name: 🔮 LOAD
+    type: load-balance
+    filter: 香港|台湾|韩国|日本|狮城|美国|新加坡|🇭🇰|🇹🇼|🇸🇬|🇰🇷|🇯🇵|🇺🇸
+    use:
+      - BaiPiao
+
+  - name: 🇭🇰 HK
+    type: url-test
+    filter: 🇭🇰|香港
+    use:
+      - BaiPiao
+
+  - name: 🇹🇼 TW
+    type: url-test
+    filter: 🇹🇼|台湾
+    use:
+      - BaiPiao
+
+  - name: 🇸🇬 SG
+    type: url-test
+    filter: 🇸🇬|狮城|新加坡
+    use:
+      - BaiPiao
+
+  - name: 🇰🇷 KR
+    type: url-test
+    filter: 🇰🇷|韩国
+    use:
+      - BaiPiao
+
+  - name: 🇯🇵 JP
+    type: url-test
+    filter: 🇯🇵|日本
+    use:
+      - BaiPiao
+
+  - name: 🇺🇸 US
+    type: url-test
+    filter: 🇺🇸|美国
+    use:
+      - BaiPiao
+
+rule-providers:
+  ADS-PRO:
+    type: http
+    behavior: domain
+    url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main//Filters/AWAvenue-Ads-Rule-Clash.yaml"
+    path: ./AWAvenue-Ads-Rule-Clash.yaml
+    format: yaml
+    interval: 86400
+
+  ADS-MAX:
+    type: http
+    behavior: domain
+    url: "https://adrules.top/adrules_domainset.txt"
+    format: text
+    interval: 86400
+
+rules:
+  - RULE-SET,ADS-PRO,REJECT
+  - RULE-SET,ADS-MAX,REJECT
+  - OR,((GEOSITE,GOOGLE),(GEOSITE,!CN)),🇺🇳 OVERSEAS
+  - OR,((GEOSITE,CN),(GEOIP,CN,NO-RESOLVE)),DIRECT
+  - OR,((GEOSITE,PRIVATE),(GEOIP,PRIVATE,NO-RESOLVE)),DIRECT
+  - MATCH,🇺🇳 OVERSEAS
+  - MATCH,REJECT
