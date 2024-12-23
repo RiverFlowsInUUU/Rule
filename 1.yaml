@@ -74,8 +74,8 @@ dns:
     
 
     'rule-set:category-ai-chat-!cn': 
-      - "https://8.8.4.4/dns-query#OpenAI"
-      - "https://1.0.0.1/dns-query#OpenAI"
+      - "https://8.8.4.4/dns-query#AI"
+      - "https://1.0.0.1/dns-query#AI"
    
     'rule-set:telegram': 
       - "https://8.8.4.4/dns-query#Telegram"
@@ -146,7 +146,6 @@ proxy-groups:
     proxies:
       - Fast
       - Select
-      - DIRECT
       - HK
       - TW
       - JP
@@ -166,7 +165,7 @@ proxy-groups:
     icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Global.png
     type: select
     include-all: true
-  - name: OpenAI
+  - name: AI
     icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/ChatGPT.png
     type: select
     proxies:
@@ -209,7 +208,6 @@ proxy-groups:
       - Other regions
       - Select
       - Fast
-      - DIRECT
   - name: Microsoft
     icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Microsoft.png
     type: select
@@ -239,7 +237,6 @@ proxy-groups:
       - Other regions
       - Select
       - Fast
-      - DIRECT
   - name: Netflix
     icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Netflix.png
     type: select
@@ -254,7 +251,6 @@ proxy-groups:
       - Other regions
       - Select
       - Fast
-      - DIRECT
   - name: Spotify
     icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Spotify.png
     type: select
@@ -269,7 +265,6 @@ proxy-groups:
       - Other regions
       - Select
       - Fast
-      - DIRECT
   - name: Disney+
     icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Disney.png
     type: select
@@ -284,7 +279,6 @@ proxy-groups:
       - Other regions
       - Select
       - Fast
-      - DIRECT
   - name: TikTok
     icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/TikTok.png
     type: select
@@ -299,7 +293,6 @@ proxy-groups:
       - Other regions
       - Select
       - Fast
-      - DIRECT
   - name: Steam
     icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Steam.png
     type: select
@@ -390,7 +383,7 @@ proxy-groups:
       - DIRECT
 rules:
   #- SCRIPT,quic,REJECT
-  - RULE-SET,category-ai-chat-!cn,OpenAI
+  - RULE-SET,category-ai-chat-!cn,AI
   - RULE-SET,telegram,Telegram
   - RULE-SET,youtube,YouTube
   - RULE-SET,netflix,Netflix
