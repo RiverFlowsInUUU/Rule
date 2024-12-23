@@ -1,0 +1,502 @@
+redir-port: 9797
+mixed-port: 7890
+tproxy-port: 0
+mode: rule
+allow-lan: true
+bind-address: '*'
+global-ua: clash-verge/v1.6.0
+unified-delay: true
+tcp-concurrent: true
+enable-process: true
+find-process-mode: off
+log-level: error
+ipv6: true
+geodata-mode: true
+#interface-name: tun0   #出口网卡名称 可用来桥接VPN类软件
+#面板可选metacubexd/yacd 有需要请自行修改
+external-controller: 0.0.0.0:9090
+external-ui: dashboard/metacubexd
+secret: ""
+external-ui-url: "https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip"
+
+geox-url:
+  geoip: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat"
+  geosite: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
+  mmdb: "https://raw.githubusercontent.com/Loyalsoldier/geoip/release/Country.mmdb"
+geo-auto-update: true
+geo-update-interval: 48
+
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+sniffer:
+  enable: true
+  parse-pure-ip: true
+  override-destination: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+  skip-domain:
+    - "Mijia Cloud"
+
+tun:
+  enable: true
+  device: utun
+  stack: mixed
+  dns-hijack:
+    - any:53
+  auto-route: true
+  auto-detect-interface: true
+  strict-route: true
+
+dns:
+  enable: true
+  use-hosts: true
+  perfer-h3: false
+  ipv6-timeout: 300
+  listen: 0.0.0.0:1053
+  enhanced-mode: redir-host
+  # redir-host / fake-ip 可切换，建议使用redir-host避免dns污染，泄露
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter:
+    - "*"
+    - "+.lan"
+    - "+.local"
+    - "localhost.ptlogin2.qq.com"
+
+  nameserver-policy:
+    
+
+    'rule-set:category-ai-chat-!cn': 
+      - "https://8.8.4.4/dns-query#OpenAI"
+      - "https://1.0.0.1/dns-query#OpenAI"
+   
+    'rule-set:telegram': 
+      - "https://8.8.4.4/dns-query#Telegram"
+      - "https://1.0.0.1/dns-query#Telegram"
+
+    'rule-set:youtube': 
+      - "https://8.8.4.4/dns-query#Youtube"
+      - "https://1.0.0.1/dns-query#Youtube"
+
+    'rule-set:netflix': 
+      - "https://8.8.4.4/dns-query#Netflix"
+      - "https://1.0.0.1/dns-query#Netflix"
+
+    'rule-set:spotify': 
+      - "https://8.8.4.4/dns-query#Spotify"
+      - "https://1.0.0.1/dns-query#Spotify"
+
+    'rule-set:disney': 
+      - "https://8.8.4.4/dns-query#Disney"
+      - "https://1.0.0.1/dns-query#Disney"
+      
+
+    'rule-set:tiktok': 
+      - "https://8.8.4.4/dns-query#Tiktok"
+      - "https://1.0.0.1/dns-query#Tiktok"
+      
+    'rule-set:tiktok': 
+      - "https://8.8.4.4/dns-query#Tiktok"
+      - "https://1.0.0.1/dns-query#Tiktok"            
+      
+    'rule-set:steam@cn':
+      - "https://223.5.5.5/dns-query#CN"
+      - "https://120.53.53.53/dns-query#CN" 
+
+    'rule-set:google-cn':
+      - "https://223.5.5.5/dns-query#CN"
+      - "https://120.53.53.53/dns-query#CN" 
+
+    'rule-set:apple-cn':
+      - "https://223.5.5.5/dns-query#CN"
+      - "https://120.53.53.53/dns-query#CN"
+
+    'rule-set:microsoft@cn':
+      - "https://223.5.5.5/dns-query#CN"
+      - "https://120.53.53.53/dns-query#CN"
+                           
+    'geosite:cn,private':
+      - "https://223.5.5.5/dns-query#CN"
+      - "https://120.53.53.53/dns-query#CN"
+  
+  nameserver:
+    - "https://8.8.4.4/dns-query#Top"
+    - "https://1.0.0.1/dns-query#Top"
+
+  proxy-server-nameserver:
+    - "https://223.5.5.5/dns-query#CN"
+    - "https://120.53.53.53/dns-query#CN"
+proxy-providers:
+  Provider-1:
+    interval: 600
+    type: http
+    url: 
+proxies:
+proxy-groups:
+  - name: Top
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Proxy.png
+    type: select
+    proxies:
+      - Fast
+      - Select
+      - DIRECT
+      - HK
+      - TW
+      - JP
+      - KR
+      - US
+      - SG
+      - Other regions
+  # 功能分组
+  - name: Fast
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Auto.png
+    type: url-test
+    include-all: true
+    interval: 120
+    tolerance: 50
+    lazy: true
+  - name: Select
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Global.png
+    type: select
+    include-all: true
+  - name: OpenAI
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/ChatGPT.png
+    type: select
+    proxies:
+      - US
+      - SG
+      - JP
+      - TW
+      - KR
+      - Top
+      - HK
+      - Other regions
+      - Select
+      - Fast
+  - name: Apple
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Apple.png
+    type: select
+    proxies:
+      - DIRECT
+      - Top
+      - Fast
+      - Select
+      - HK
+      - TW
+      - JP
+      - KR
+      - US
+      - SG
+      - Other regions
+  - name: Telegram
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Telegram.png
+    type: select
+    proxies:
+      - Top
+      - HK
+      - TW
+      - JP
+      - KR
+      - US
+      - SG
+      - Other regions
+      - Select
+      - Fast
+      - DIRECT
+  - name: Microsoft
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Microsoft.png
+    type: select
+    proxies:
+      - Top
+      - HK
+      - TW
+      - JP
+      - KR
+      - US
+      - SG
+      - Other regions
+      - Select
+      - Fast
+      - DIRECT
+  - name: YouTube
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/YouTube.png
+    type: select
+    proxies:
+      - Top
+      - HK
+      - TW
+      - JP
+      - KR
+      - US
+      - SG
+      - Other regions
+      - Select
+      - Fast
+      - DIRECT
+  - name: Netflix
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Netflix.png
+    type: select
+    proxies:
+      - Top
+      - HK
+      - TW
+      - JP
+      - KR
+      - US
+      - SG
+      - Other regions
+      - Select
+      - Fast
+      - DIRECT
+  - name: Spotify
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Spotify.png
+    type: select
+    proxies:
+      - Top
+      - HK
+      - TW
+      - JP
+      - KR
+      - US
+      - SG
+      - Other regions
+      - Select
+      - Fast
+      - DIRECT
+  - name: Disney+
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Disney.png
+    type: select
+    proxies:
+      - Top
+      - HK
+      - TW
+      - JP
+      - KR
+      - US
+      - SG
+      - Other regions
+      - Select
+      - Fast
+      - DIRECT
+  - name: TikTok
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/TikTok.png
+    type: select
+    proxies:
+      - Top
+      - HK
+      - TW
+      - JP
+      - KR
+      - US
+      - SG
+      - Other regions
+      - Select
+      - Fast
+      - DIRECT
+  - name: Steam
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Steam.png
+    type: select
+    proxies:
+      - Top
+      - HK
+      - TW
+      - JP
+      - KR
+      - US
+      - SG
+      - Other regions
+      - Select
+      - Fast
+      - DIRECT
+#  - name: CN
+#    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/StreamingCN.png
+#    type: select
+#    proxies:
+#      - DIRECT
+  # 基于地区分组
+  - name: HK
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Hong_Kong.png
+    type: url-test
+    include-all: true
+    interval: 120
+    tolerance: 50
+    lazy: true
+    filter: "(?i)(澳门|🇲🇴|港|🇭🇰|hk|hong)"
+  - name: TW
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Taiwan.png
+    type: url-test
+    include-all: true
+    interval: 120
+    tolerance: 50
+    lazy: true
+    filter: "(?i)(台|🇹🇼|湾|tw|taiwan)"
+  - name: JP
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Japan.png
+    type: url-test
+    include-all: true
+    interval: 120
+    tolerance: 50
+    lazy: true
+    filter: "(?i)(日|🇯🇵|东京|大阪|jp|japan)"
+  - name: KR
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Korea.png
+    type: url-test
+    include-all: true
+    interval: 120
+    tolerance: 50
+    lazy: true
+    filter: "(?i)(韩|🇰🇷|kr|korea)"
+  - name: US
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/United_States.png
+    type: url-test
+    include-all: true
+    interval: 120
+    tolerance: 50
+    lazy: true
+    filter: "(?i)(美|🇺🇲|us|states|america)"
+  - name: SG
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Singapore.png
+    type: url-test
+    include-all: true
+    interval: 120
+    tolerance: 50
+    lazy: true
+    filter: "(?i)(新加坡|坡|狮城|🇸🇬|sg|singapore)"
+  #  - name: TK 土耳其
+  #    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Turkey.png
+  #    type: select
+  #    include-all: true
+  #    filter: "土耳其|🇹🇷|TK|(?i)turkey"
+  - name: Other regions
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/World_Map.png
+    type: url-test
+    include-all: true
+    interval: 120
+    tolerance: 50
+    lazy: true
+    filter: "(?i)^(?!.*(?:🇭🇰|🇹🇼|🇯🇵|🇰🇷|🇺🇸|🇸🇬|🇨🇳|港|hk|hong|台|tw|taiwan|日本|jp|japan|韩|kr|korea|美|us|states|新加坡|sg|singapore)).*"
+  - name: Final
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Final.png
+    type: select
+    proxies:
+      - Top
+      - DIRECT
+rules:
+  #- SCRIPT,quic,REJECT
+  - RULE-SET,category-ai-chat-!cn,OpenAI
+  - RULE-SET,telegram,Telegram
+  - RULE-SET,youtube,YouTube
+  - RULE-SET,netflix,Netflix
+  - RULE-SET,spotify,Spotify
+  - RULE-SET,disney,Disney+
+  - RULE-SET,tiktok,TikTok
+  - RULE-SET,steam@cn,DIRECT
+  - RULE-SET,steam,Steam
+  - RULE-SET,pixiv,Final
+  - RULE-SET,google-cn,DIRECT
+  - RULE-SET,apple-cn,Apple
+  - RULE-SET,microsoft@cn,DIRECT
+  - RULE-SET,microsoft,Microsoft
+  - RULE-SET,gfw,Top
+  - GEOSITE,CN,DIRECT
+  - GEOIP,LAN,DIRECT
+  - GEOIP,CN,DIRECT
+  - MATCH,Final
+rule-providers:
+  category-ai-chat-!cn:
+    type: http
+    interval: 86400
+    behavior: domain
+    format: text
+    url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ai-chat-!cn.list
+  telegram:
+    type: http
+    interval: 86400
+    behavior: domain
+    format: text
+    url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/telegram.list
+  youtube:
+    type: http
+    interval: 86400
+    behavior: domain
+    format: text
+    url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/youtube.list
+  netflix:
+    type: http
+    interval: 86400
+    behavior: domain
+    format: text
+    url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/netflix.list
+  spotify:
+    type: http
+    interval: 86400
+    behavior: domain
+    format: text
+    url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/spotify.list
+  disney:
+    type: http
+    interval: 86400
+    behavior: domain
+    format: text
+    url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/disney.list
+  tiktok:
+    type: http
+    interval: 86400
+    behavior: domain
+    format: text
+    url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/tiktok.list
+  steam@cn:
+    type: http
+    interval: 86400
+    behavior: domain
+    format: text
+    url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/steam@cn.list
+  steam:
+    type: http
+    interval: 86400
+    behavior: domain
+    format: text
+    url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/steam.list
+  pixiv:
+    type: http
+    interval: 86400
+    behavior: domain
+    format: text
+    url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/pixiv.list
+  google-cn:
+    type: http
+    interval: 86400
+    behavior: domain
+    format: text
+    url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/google-cn.list
+  apple-cn:
+    type: http
+    interval: 86400
+    behavior: domain
+    format: text
+    url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/apple-cn.list
+  microsoft@cn:
+    type: http
+    interval: 86400
+    behavior: domain
+    format: text
+    url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft@cn.list
+  microsoft:
+    type: http
+    interval: 86400
+    behavior: domain
+    format: text
+    url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft.list
+  gfw:
+    type: http
+    interval: 86400
+    behavior: domain
+    format: text
+    url: https://fastly.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/gfw.list
