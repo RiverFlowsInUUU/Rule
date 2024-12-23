@@ -360,7 +360,7 @@ proxy-groups:
     interval: 120
     tolerance: 50
     lazy: true
-    filter: "(?i)(美|🇺🇲|us|states|america)"
+    filter: "(?i)(美|🇺🇲|us|states|america|洛杉矶|纽约)"
   - name: SG
     icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Singapore.png
     type: url-test
