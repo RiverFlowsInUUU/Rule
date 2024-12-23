@@ -162,7 +162,7 @@ proxy-groups:
     tolerance: 50
     lazy: true
   - name: Select
-    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Global.png
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Static_1.png
     type: select
     include-all: true
   - name: AI
