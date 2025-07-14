@@ -139,12 +139,13 @@ LoadBalance: &LoadBalance {type: load-balance, interval: 300, lazy: true, url: '
 # 代理组
 proxy-groups: 
 
-# 全部节点
- - {name: AllServer, icon: https://gh-proxy.com/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Airport.png, type: select, proxies: [All-Auto], include-all-providers: true, filter: *All}
 
 
 # 节点切换
  - {name: Proxy, icon: https://gh-proxy.com/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Rocket.png, <<: *Select, proxies: [HongKong,TaiWan,Japan,Singapore,America,AllServer,DIRECT]}
+
+# 全部节点
+ - {name: AllServer, icon: https://gh-proxy.com/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Airport.png, type: select, proxies: [All-Auto,All-LoadBalance], include-all-providers: true, filter: *All}
 
 # AI平台
  - {name: AI, icon: https://gh-proxy.com/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png, <<: *Select}
@@ -225,6 +226,9 @@ proxy-groups:
 
 # 全部节点延时优选
  - {name: All-Auto, <<: *UrlTest, filter: *All}
+
+# 全部节点负载均衡
+ - {name: All-LoadBalance, <<: *LoadBalance, filter: *All}
 
 
 # 漏网之鱼
