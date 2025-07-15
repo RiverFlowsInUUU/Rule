@@ -496,7 +496,7 @@ rules:
   - RULE-SET,proxy-domain,Proxy
 
   - RULE-SET,google-ip,Google
-  - RULE-SET,netflix-ip,NETFLIX
+  - RULE-SET,netflix-ip,Netflix
   - RULE-SET,telegram-ip,Telegram
   - RULE-SET,twitter-ip,X
   - RULE-SET,cn-domain,DIRECT
