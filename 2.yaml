@@ -102,11 +102,151 @@ dns:
   fake-ip-range: 198.18.0.0/16       # Fake-IP 解析地址池
   fake-ip-filter: ['*', '+.lan', '+.local', '+.market.xiaomi.com', '+.msftconnecttest.com', '+.msftncsi.com']
                                      # Fake-ip 过滤，列表中的域名返回真实IP
-  respect-rules: false               # dns 连接跟随 rules，需配置 proxy-server-nameserver
-  default-nameserver: [tls://223.5.5.5, tls://223.6.6.6]
+  #respect-rules: false               # dns 连接跟随 rules，需配置 proxy-server-nameserver
+ # default-nameserver: [tls://223.5.5.5, tls://223.6.6.6]
                                      # 解析非IP的dns用的dns服务器，只支持纯IP, 可为加密 DNS
-  nameserver: [https://dns.alidns.com/dns-query, https://doh.pub/dns-query]
+  #nameserver: [https://dns.alidns.com/dns-query, https://doh.pub/dns-query]
                                      # 默认DNS服务器，支持udp/tcp/dot/doh/doq
+
+nameserver-policy:
+  
+    'rule-set:private-domain':
+      - "https://223.5.5.5/dns-query#DIRECT"
+      - "https://120.53.53.53/dns-query#DIRECT"  
+
+    'rule-set:ai-domain': 
+      - "https://8.8.4.4/dns-query#AI"
+      - "https://1.0.0.1/dns-query#AI"
+   
+    'rule-set:telegram-domain': 
+      - "https://8.8.4.4/dns-query#Telegram"
+      - "https://1.0.0.1/dns-query#Telegram"
+
+    'rule-set:telegram-ip': 
+      - "https://8.8.4.4/dns-query#Telegram"
+      - "https://1.0.0.1/dns-query#Telegram"
+
+    'rule-set:youtube-domain': 
+      - "https://8.8.4.4/dns-query#YouTube"
+      - "https://1.0.0.1/dns-query#YouTube"
+
+    'rule-set:netflix-domain': 
+      - "https://8.8.4.4/dns-query#Netflix"
+      - "https://1.0.0.1/dns-query#Netflix"
+      
+    'rule-set:github-domain': 
+      - "https://8.8.4.4/dns-query#Proxy"
+      - "https://1.0.0.1/dns-query#Proxy"
+        
+    'rule-set:twitter-domain': 
+      - "https://8.8.4.4/dns-query#X"
+      - "https://1.0.0.1/dns-query#X"  
+            
+    'rule-set:twitter-ip': 
+      - "https://8.8.4.4/dns-query#X"
+      - "https://1.0.0.1/dns-query#X"    
+    
+    'rule-set:netflix-ip': 
+      - "https://8.8.4.4/dns-query#Netflix"
+      - "https://1.0.0.1/dns-query#Netflix"
+      
+    'rule-set:spotify-domain': 
+      - "https://8.8.4.4/dns-query#Spotify"
+      - "https://1.0.0.1/dns-query#Spotify"
+
+    'rule-set:disney-domain': 
+      - "https://8.8.4.4/dns-query#Disney"
+      - "https://1.0.0.1/dns-query#Disney"
+      
+    'rule-set:emby-classical': 
+      - "https://8.8.4.4/dns-query#Emby"
+      - "https://1.0.0.1/dns-query#Emby"
+      
+   'rule-set:bahamut-domain': 
+      - "https://8.8.4.4/dns-query#TaiWan"
+      - "https://1.0.0.1/dns-query#TaiWan" 
+      
+    'rule-set:tiktok-domain': 
+      - "https://8.8.4.4/dns-query#TikTok"
+      - "https://1.0.0.1/dns-query#TikTok"            
+    
+
+    'rule-set:bilibili-ip':
+      - "https://223.5.5.5/dns-query#bilibili"
+      - "https://120.53.53.53/dns-query#bilibili" 
+    
+    'rule-set:cn-domain':
+      - "https://223.5.5.5/dns-query#DIRECT"
+      - "https://120.53.53.53/dns-query#DIRECT" 
+      
+    'rule-set:bilibili-domain':
+      - "https://223.5.5.5/dns-query#bilibili"
+      - "https://120.53.53.53/dns-query#bilibili" 
+      
+    'rule-set:neteasemusic-classical':
+      - "https://223.5.5.5/dns-query#NetEaseMusic"
+      - "https://120.53.53.53/dns-query#NetEaseMusic" 
+
+    'rule-set:biliintl-domain': 
+      - "https://8.8.4.4/dns-query#Streaming"
+      - "https://1.0.0.1/dns-query#Streaming"     
+
+    'rule-set:proxymedia-classical': 
+      - "https://8.8.4.4/dns-query#Streaming"
+      - "https://1.0.0.1/dns-query#Streaming"     
+
+    'rule-set:wechat-classical':
+      - "https://223.5.5.5/dns-query#DIRECT"
+      - "https://120.53.53.53/dns-query#DIRECT"
+
+    'rule-set:apple-classical': 
+      - "https://8.8.4.4/dns-query#America"
+      - "https://1.0.0.1/dns-query#America"     
+
+    'rule-set:google-domain': 
+      - "https://8.8.4.4/dns-query#Google"
+      - "https://1.0.0.1/dns-query#Google"    
+    
+    'rule-set:google-ip': 
+      - "https://8.8.4.4/dns-query#Google"
+      - "https://1.0.0.1/dns-query#Google"   
+      
+    'rule-set:games-domain': 
+      - "https://8.8.4.4/dns-query#Games"
+      - "https://1.0.0.1/dns-query#Games"    
+      
+    'rule-set:proxy-domain': 
+      - "https://8.8.4.4/dns-query#Proxy"
+      - "https://1.0.0.1/dns-query#Proxy"    
+      
+    'rule-set:apple-domain':
+      - "https://223.5.5.5/dns-query#Apple"
+      - "https://120.53.53.53/dns-query#Apple"
+    
+    'rule-set:apple-ip':
+      - "https://223.5.5.5/dns-query#Apple"
+      - "https://120.53.53.53/dns-query#Apple"
+      
+    'rule-set:microsoft-domain':
+      - "https://223.5.5.5/dns-query#Microsoft"
+      - "https://8.8.4.4/dns-query#Microsoft"
+                           
+    'rule-set:private-ip':
+      - "https://223.5.5.5/dns-query#Direct"
+      - "https://120.53.53.53/dns-query#Direct"
+
+    'geoip:cn':
+      - "https://223.5.5.5/dns-query#Direct"
+      - "https://120.53.53.53/dns-query#Direct"
+
+  
+  nameserver:
+    - "https://8.8.4.4/dns-query#Proxy"
+    - "https://1.0.0.1/dns-query#Proxy"
+
+  proxy-server-nameserver:
+    - "https://223.5.5.5/dns-query#DIRECT"
+    - "https://120.53.53.53/dns-query#DIRECT"
 
 ######### 锚点 start #########
 
@@ -154,7 +294,7 @@ proxy-groups:
  - {name: YouTube, icon: https://gh-proxy.com/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png, <<: *Select}
 
 # Netflix
- - {name: NETFLIX, icon: https://gh-proxy.com/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png, <<: *Select}
+ - {name: Netflix, icon: https://gh-proxy.com/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png, <<: *Select}
 
 # Disney+
  - {name: Disney+, icon: https://gh-proxy.com/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Disney.png, <<: *Select}
@@ -334,7 +474,7 @@ rules:
   - RULE-SET,private-domain,DIRECT
   - RULE-SET,ai-domain,AI
   - RULE-SET,youtube-domain,YouTube
-  - RULE-SET,netflix-domain,NETFLIX
+  - RULE-SET,netflix-domain,Netflix
   - RULE-SET,disney-domain,Disney+
   - RULE-SET,emby-classical,Emby
   - RULE-SET,tiktok-domain,TikTok
