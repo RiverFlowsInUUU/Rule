@@ -7,7 +7,7 @@
 # 远程订阅
 proxy-providers:
   provider1:
-    url: "http://59.80.54.192:10601/api/v1/client/subscribe?token=34b53c9788e7418894cb9ffac6e39db2"
+    url: ""
     type: http
     interval: 86400
     health-check: {enable: true,url: "https://www.gstatic.com/generate_204",interval: 300}
