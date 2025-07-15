@@ -7,7 +7,7 @@
 # 远程订阅
 proxy-providers:
   provider1:
-    url: ""
+    url: "http://59.80.54.192:10601/api/v1/client/subscribe?token=34b53c9788e7418894cb9ffac6e39db2"
     type: http
     interval: 86400
     health-check: {enable: true,url: "https://www.gstatic.com/generate_204",interval: 300}
@@ -107,8 +107,7 @@ dns:
     - "+.local"
     - "localhost.ptlogin2.qq.com"
 
-
- nameserver-policy:
+  nameserver-policy:
   
     'rule-set:private-domain':
       - "https://223.5.5.5/dns-query#DIRECT"
@@ -119,10 +118,6 @@ dns:
       - "https://1.0.0.1/dns-query#AI"
    
     'rule-set:telegram-domain': 
-      - "https://8.8.4.4/dns-query#Telegram"
-      - "https://1.0.0.1/dns-query#Telegram"
-
-    'rule-set:telegram-ip': 
       - "https://8.8.4.4/dns-query#Telegram"
       - "https://1.0.0.1/dns-query#Telegram"
 
@@ -141,14 +136,6 @@ dns:
     'rule-set:twitter-domain': 
       - "https://8.8.4.4/dns-query#X"
       - "https://1.0.0.1/dns-query#X"  
-            
-    'rule-set:twitter-ip': 
-      - "https://8.8.4.4/dns-query#X"
-      - "https://1.0.0.1/dns-query#X"    
-    
-    'rule-set:netflix-ip': 
-      - "https://8.8.4.4/dns-query#Netflix"
-      - "https://1.0.0.1/dns-query#Netflix"
       
     'rule-set:spotify-domain': 
       - "https://8.8.4.4/dns-query#Spotify"
@@ -169,11 +156,6 @@ dns:
     'rule-set:tiktok-domain': 
       - "https://8.8.4.4/dns-query#TikTok"
       - "https://1.0.0.1/dns-query#TikTok"            
-    
-
-    'rule-set:bilibili-ip':
-      - "https://223.5.5.5/dns-query#bilibili"
-      - "https://120.53.53.53/dns-query#bilibili" 
     
     'rule-set:cn-domain':
       - "https://223.5.5.5/dns-query#DIRECT"
@@ -206,10 +188,6 @@ dns:
     'rule-set:google-domain': 
       - "https://8.8.4.4/dns-query#Google"
       - "https://1.0.0.1/dns-query#Google"    
-    
-    'rule-set:google-ip': 
-      - "https://8.8.4.4/dns-query#Google"
-      - "https://1.0.0.1/dns-query#Google"   
       
     'rule-set:games-domain': 
       - "https://8.8.4.4/dns-query#Games"
@@ -222,32 +200,25 @@ dns:
     'rule-set:apple-domain':
       - "https://223.5.5.5/dns-query#Apple"
       - "https://120.53.53.53/dns-query#Apple"
-    
-    'rule-set:apple-ip':
-      - "https://223.5.5.5/dns-query#Apple"
-      - "https://120.53.53.53/dns-query#Apple"
-      
+       
     'rule-set:microsoft-domain':
       - "https://223.5.5.5/dns-query#Microsoft"
       - "https://8.8.4.4/dns-query#Microsoft"
                            
-    'rule-set:private-ip':
-      - "https://223.5.5.5/dns-query#Direct"
-      - "https://120.53.53.53/dns-query#Direct"
 
     'geoip:cn':
       - "https://223.5.5.5/dns-query#Direct"
       - "https://120.53.53.53/dns-query#Direct"
 
-      'geosite:cn,private':
+    'geosite:cn,private':
       - "https://223.5.5.5/dns-query#Direct"
       - "https://120.53.53.53/dns-query#Direct"
       
- nameserver:
+  nameserver:
     - "https://8.8.4.4/dns-query#Proxy"
     - "https://1.0.0.1/dns-query#Proxy"
 
- proxy-server-nameserver:
+  proxy-server-nameserver:
     - "https://223.5.5.5/dns-query#DIRECT"
     - "https://120.53.53.53/dns-query#DIRECT"
 
@@ -373,7 +344,6 @@ proxy-groups:
 # 全部节点负载均衡
  - {name: All-LoadBalance, <<: *LoadBalance, filter: *All}
 
-
 # 漏网之鱼
  - {name: Final, icon: https://gh-proxy.com/https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png, <<: *Select, proxies: [Proxy,DIRECT]}
 
@@ -497,7 +467,6 @@ rules:
   - RULE-SET,microsoft-domain,Microsoft
   - RULE-SET,games-domain,Games
   - RULE-SET,proxy-domain,Proxy
-
   - RULE-SET,google-ip,Google
   - RULE-SET,netflix-ip,Netflix
   - RULE-SET,telegram-ip,Telegram
