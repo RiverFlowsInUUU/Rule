@@ -6,22 +6,22 @@
 
 # 远程订阅
 proxy-providers:
-  provider1:
+  代理1:
     url: ""
     type: http
     interval: 86400
     health-check: {enable: true,url: "https://www.gstatic.com/generate_204",interval: 300}
     override:
-      additional-prefix: "[provider1]"
+      additional-prefix: "[代理1]"
 
-  provider2:
+  代理2:
     url: ""
     type: http
     interval: 86400
     health-check: {enable: true,url: "https://www.gstatic.com/generate_204",interval: 300}
     override:
-      additional-prefix: "[provider2]"
-# 1. 请把订阅链接填入到provider1或provider2下面的url后的引号""内使用,订阅名称可自行重命名，不能重复。
+      additional-prefix: "[代理2]"
+# 1. 请把订阅链接填入到代理1或代理2下面的url后的引号""内使用,订阅名称可自行重命名，不能重复。
 # 2. 或可通过Sub-Store进行订阅转换(或需自建Sub-Store服务)。
 
 # 本地服务器
