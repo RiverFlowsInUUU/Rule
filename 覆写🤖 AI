@@ -1,0 +1,125 @@
+function main(config) {
+  if (!config.proxies) config.proxies = [];
+  if (!config["proxy-groups"]) config["proxy-groups"] = [];
+  if (!config.rules) config.rules = [];
+
+  // ===== 1. 收集所有代理节点 =====
+  const allProxies = config.proxies.map(p => p.name);
+
+  if (config["proxy-providers"]) {
+    for (const providerName in config["proxy-providers"]) {
+      allProxies.push(providerName);
+    }
+  }
+
+  // ===== 2. 添加 🤖AI 代理组（追加到最后）=====
+  const aiGroupName = "🤖AI";
+  const exists = config["proxy-groups"].some(g => g.name === aiGroupName);
+
+  if (!exists) {
+    config["proxy-groups"].push({
+      name: aiGroupName,
+      type: "select",
+      proxies: ["DIRECT", ...allProxies]
+    });
+  }
+
+  // ===== 3. AI 规则 =====
+  const aiRules = [
+    "DOMAIN-SUFFIX,augment.com",
+    "DOMAIN-SUFFIX,augmentcode.com",
+
+    "DOMAIN-SUFFIX,ai.com",
+    "DOMAIN-SUFFIX,chatgpt.com",
+    "DOMAIN-SUFFIX,openai.com",
+
+    "DOMAIN,chat.openai.com.cdn.cloudflare.net",
+    "DOMAIN,openaiapi-site.azureedge.net",
+    "DOMAIN,openaicom-api-bdcpf8c6d2e9atf6.z01.azurefd.net",
+    "DOMAIN,openaicomproductionae4b.blob.core.windows.net",
+    "DOMAIN,production-openaicom-storage.azureedge.net",
+    "DOMAIN-SUFFIX,cdn.oaistatic.com",
+    "DOMAIN-SUFFIX,oaiusercontent.com",
+    "DOMAIN,o33249.ingest.sentry.io",
+
+    "DOMAIN-SUFFIX,cerebras.ai",
+    "DOMAIN-SUFFIX,chorus.sh",
+
+    "DOMAIN-SUFFIX,anthropic.com",
+    "DOMAIN-SUFFIX,claude.ai",
+    "DOMAIN-SUFFIX,claudeusercontent.com",
+
+    "DOMAIN,gateway.ai.cloudflare.com",
+
+    "DOMAIN-SUFFIX,githubcopilot.com",
+    "DOMAIN-SUFFIX,microsoftonline.com",
+    "DOMAIN,copilot.microsoft.com",
+
+    "DOMAIN-SUFFIX,cursor.sh",
+    "DOMAIN-SUFFIX,diabrowser.engineering",
+    "DOMAIN-SUFFIX,dify.ai",
+
+    "DOMAIN,api.github.com",
+
+    "DOMAIN-KEYWORD,alkalimakersuite-pa.clients6.google.com",
+    "DOMAIN-SUFFIX,aistudio.google.com",
+    "DOMAIN-SUFFIX,makersuite.google.com",
+    "DOMAIN-SUFFIX,generativeai.google",
+    "DOMAIN,ai.google.dev",
+    "DOMAIN,alkalicore-pa.clients6.google.com",
+    "DOMAIN,waa-pa.clients6.google.com",
+
+    "DOMAIN-SUFFIX,deepmind.com",
+    "DOMAIN-SUFFIX,deepmind.google",
+
+    "DOMAIN-SUFFIX,generativelanguage.googleapis.com",
+    "DOMAIN-SUFFIX,geller-pa.googleapis.com",
+    "DOMAIN-SUFFIX,proactivebackend-pa.googleapis.com",
+
+    "DOMAIN-SUFFIX,aisandbox-pa.googleapis.com",
+    "DOMAIN-SUFFIX,apis.google.com",
+    "DOMAIN-SUFFIX,bard.google.com",
+    "DOMAIN-SUFFIX,gemini.google.com",
+    "DOMAIN-SUFFIX,robinfrontend-pa.googleapis.com",
+
+    "DOMAIN-SUFFIX,notebooklm.google",
+    "DOMAIN-SUFFIX,notebooklm.google.com",
+
+    "DOMAIN-SUFFIX,x.ai",
+    "DOMAIN-SUFFIX,grok.com",
+    "DOMAIN-SUFFIX,groq.com",
+
+    "DOMAIN-SUFFIX,clipdrop.co",
+    "DOMAIN-SUFFIX,jasper.ai",
+
+    "DOMAIN-SUFFIX,jetbrains.ai",
+    "DOMAIN-SUFFIX,meta.ai",
+    "DOMAIN-SUFFIX,openart.ai",
+    "DOMAIN-SUFFIX,openrouter.ai",
+    "DOMAIN-SUFFIX,perplexity.ai",
+    "DOMAIN-SUFFIX,poe.com",
+
+    "DOMAIN-SUFFIX,apple-relay.apple.com",
+    "DOMAIN-SUFFIX,apple-relay.fastly-edge.com",
+    "DOMAIN-SUFFIX,apple-relay.cloudflare.com",
+    "DOMAIN-SUFFIX,guzzoni.apple.com",
+    "DOMAIN-SUFFIX,cp4.cloudflare.com",
+    "DOMAIN-SUFFIX,gspe1-ssl.ls.apple.com",
+    "DOMAIN-SUFFIX,smoot.apple.com",
+
+    "DOMAIN-SUFFIX,sora.com",
+    "DOMAIN,sora-cdn.oaistatic.com",
+
+    "DOMAIN-SUFFIX,windsurf.com",
+    "DOMAIN-SUFFIX,codeium.com",
+    "DOMAIN-SUFFIX,codeiumdata.com",
+
+    "DOMAIN-SUFFIX,zed.dev"
+  ];
+
+  // ===== 4. AI 规则插入到规则最前（高优先级）=====
+  const finalRules = aiRules.map(r => `${r},${aiGroupName}`);
+  config.rules = [...finalRules, ...config.rules];
+
+  return config;
+}
