@@ -1,0 +1,174 @@
+function main(config) {
+  // ===============================
+  // 0. 初始化防御
+  // ===============================
+  if (!Array.isArray(config.proxies)) config.proxies = [];
+  if (!Array.isArray(config["proxy-groups"])) config["proxy-groups"] = [];
+  if (!Array.isArray(config.rules)) config.rules = [];
+
+  // ===============================
+  // 1. 自动获取第一个代理组
+  // ===============================
+  const firstGroup = config["proxy-groups"][0];
+  const firstGroupName = firstGroup?.name;
+
+  if (!firstGroupName) {
+    console.warn("⚠️ 未找到第一个代理组，Copilot 规则可能无效");
+  }
+
+  // ===============================
+  // 2. Copilot 规则（插入最前）
+  // ===============================
+  if (firstGroupName) {
+    config.rules.unshift(
+      `DOMAIN-SUFFIX,copilot.microsoft.com,${firstGroupName}`,
+      `DOMAIN,copilot.microsoft.com,${firstGroupName}`
+    );
+  }
+
+  // ===============================
+  // 3. 收集所有代理节点（含 provider）
+  // ===============================
+  const allProxies = config.proxies.map(p => p.name);
+
+  if (config["proxy-providers"]) {
+    for (const providerName in config["proxy-providers"]) {
+      allProxies.push(providerName);
+    }
+  }
+
+  // ===============================
+  // 4. 创建 🤖AI 代理组（追加到最后）
+  // ===============================
+  const aiGroupName = "🤖AI";
+  const aiGroupExists = config["proxy-groups"].some(g => g.name === aiGroupName);
+
+  if (!aiGroupExists) {
+    config["proxy-groups"].push({
+      name: aiGroupName,
+      type: "select",
+      proxies: ["DIRECT", ...allProxies]
+    });
+  }
+
+  // ===============================
+  // 5. AI 域名规则（最高优先级）
+  // ===============================
+  const aiRules = [
+    // Augment
+    "DOMAIN-SUFFIX,augment.com",
+    "DOMAIN-SUFFIX,augmentcode.com",
+
+    // OpenAI / ChatGPT
+    "DOMAIN-SUFFIX,ai.com",
+    "DOMAIN-SUFFIX,chatgpt.com",
+    "DOMAIN-SUFFIX,openai.com",
+    "DOMAIN,chat.openai.com.cdn.cloudflare.net",
+    "DOMAIN,openaiapi-site.azureedge.net",
+    "DOMAIN,openaicom-api-bdcpf8c6d2e9atf6.z01.azurefd.net",
+    "DOMAIN,openaicomproductionae4b.blob.core.windows.net",
+    "DOMAIN,production-openaicom-storage.azureedge.net",
+    "DOMAIN-SUFFIX,cdn.oaistatic.com",
+    "DOMAIN-SUFFIX,oaiusercontent.com",
+    "DOMAIN,o33249.ingest.sentry.io",
+
+    // Claude
+    "DOMAIN-SUFFIX,anthropic.com",
+    "DOMAIN-SUFFIX,claude.ai",
+    "DOMAIN-SUFFIX,claudeusercontent.com",
+
+    // Google AI / Gemini / NotebookLM
+    "DOMAIN-KEYWORD,alkalimakersuite-pa.clients6.google.com",
+    "DOMAIN-SUFFIX,aistudio.google.com",
+    "DOMAIN-SUFFIX,makersuite.google.com",
+    "DOMAIN-SUFFIX,generativeai.google",
+    "DOMAIN,ai.google.dev",
+    "DOMAIN,alkalicore-pa.clients6.google.com",
+    "DOMAIN,waa-pa.clients6.google.com",
+    "DOMAIN-SUFFIX,deepmind.com",
+    "DOMAIN-SUFFIX,deepmind.google",
+    "DOMAIN-SUFFIX,generativelanguage.googleapis.com",
+    "DOMAIN-SUFFIX,geller-pa.googleapis.com",
+    "DOMAIN-SUFFIX,proactivebackend-pa.googleapis.com",
+    "DOMAIN-SUFFIX,aisandbox-pa.googleapis.com",
+    "DOMAIN-SUFFIX,apis.google.com",
+    "DOMAIN-SUFFIX,bard.google.com",
+    "DOMAIN-SUFFIX,gemini.google.com",
+    "DOMAIN-SUFFIX,robinfrontend-pa.googleapis.com",
+    "DOMAIN-SUFFIX,notebooklm.google",
+    "DOMAIN-SUFFIX,notebooklm.google.com",
+
+    // Copilot / GitHub
+    "DOMAIN-SUFFIX,githubcopilot.com",
+    "DOMAIN-SUFFIX,microsoftonline.com",
+    "DOMAIN,api.github.com",
+
+    // Cursor / IDE
+    "DOMAIN-SUFFIX,cursor.sh",
+    "DOMAIN-SUFFIX,diabrowser.engineering",
+    "DOMAIN-SUFFIX,dify.ai",
+    "DOMAIN-SUFFIX,jetbrains.ai",
+
+    // Others
+    "DOMAIN-SUFFIX,meta.ai",
+    "DOMAIN-SUFFIX,openrouter.ai",
+    "DOMAIN-SUFFIX,perplexity.ai",
+    "DOMAIN-SUFFIX,poe.com",
+    "DOMAIN-SUFFIX,x.ai",
+    "DOMAIN-SUFFIX,grok.com",
+    "DOMAIN-SUFFIX,groq.com",
+    "DOMAIN-SUFFIX,sora.com",
+    "DOMAIN,sora-cdn.oaistatic.com",
+    "DOMAIN-SUFFIX,windsurf.com",
+    "DOMAIN-SUFFIX,codeium.com",
+    "DOMAIN-SUFFIX,codeiumdata.com",
+    "DOMAIN-SUFFIX,zed.dev"
+  ];
+
+  const aiRuleLines = aiRules.map(r => `${r},${aiGroupName}`);
+  config.rules = [...aiRuleLines, ...config.rules];
+
+  // ===============================
+  // 6. 自动测速分组 0.1-fast
+  // ===============================
+  const fastProxies = allProxies.filter(name =>
+    name.includes("0.1") || name.includes("0.01")
+  );
+
+  if (fastProxies.length > 0) {
+    const fastGroupName = "0.1-fast";
+
+    const fastGroupExists = config["proxy-groups"].some(
+      g => g.name === fastGroupName
+    );
+
+    if (!fastGroupExists) {
+      const fastGroup = {
+        name: fastGroupName,
+        type: "url-test",
+        proxies: fastProxies,
+        url: "http://www.gstatic.com/generate_204",
+        interval: 600,
+        tolerance: 50
+      };
+
+      // 插入到第二个位置
+      config["proxy-groups"].splice(1, 0, fastGroup);
+
+      // 注入第一个代理组
+      if (firstGroup) {
+        if (!Array.isArray(firstGroup.proxies)) {
+          firstGroup.proxies = [];
+        }
+        if (!firstGroup.proxies.includes(fastGroupName)) {
+          firstGroup.proxies.push(fastGroupName);
+        }
+      }
+    }
+  }
+
+  // ===============================
+  // 7. 返回最终配置
+  // ===============================
+  return config;
+}
