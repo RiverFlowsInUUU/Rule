@@ -7,27 +7,17 @@ function main(config) {
   if (!Array.isArray(config.rules)) config.rules = [];
 
   // ===============================
-  // 1. 自动获取第一个代理组
+  // 1. 自动获取第一个代理组（供测速组注入使用）
   // ===============================
   const firstGroup = config["proxy-groups"][0];
   const firstGroupName = firstGroup?.name;
 
   if (!firstGroupName) {
-    console.warn("⚠️ 未找到第一个代理组，Copilot 规则可能无效");
+    console.warn("⚠️ 未找到第一个代理组，部分自动注入逻辑将跳过");
   }
 
   // ===============================
-  // 2. Copilot 规则（插入最前）
-  // ===============================
-  if (firstGroupName) {
-    config.rules.unshift(
-      `DOMAIN-SUFFIX,copilot.microsoft.com,${firstGroupName}`,
-      `DOMAIN,copilot.microsoft.com,${firstGroupName}`
-    );
-  }
-
-  // ===============================
-  // 3. 收集所有代理节点（含 provider）
+  // 2. 收集所有代理节点（含 provider）
   // ===============================
   const allProxies = config.proxies.map(p => p.name);
 
@@ -38,7 +28,7 @@ function main(config) {
   }
 
   // ===============================
-  // 4. 创建 🤖AI 代理组（追加到最后）
+  // 3. 创建 🤖AI 代理组（不包含 DIRECT）
   // ===============================
   const aiGroupName = "🤖AI";
   const aiGroupExists = config["proxy-groups"].some(g => g.name === aiGroupName);
@@ -47,12 +37,12 @@ function main(config) {
     config["proxy-groups"].push({
       name: aiGroupName,
       type: "select",
-      proxies: ["DIRECT", ...allProxies]
+      proxies: [...allProxies]
     });
   }
 
   // ===============================
-  // 5. AI 域名规则（最高优先级）
+  // 4. AI 域名规则（最高优先级 → 🤖AI）
   // ===============================
   const aiRules = [
     // Augment
@@ -98,11 +88,12 @@ function main(config) {
     "DOMAIN-SUFFIX,notebooklm.google",
     "DOMAIN-SUFFIX,notebooklm.google.com",
 
-    // Copilot / GitHub
+    // Copilot / GitHub（现在统一走 🤖AI，不再强制主代理）
     "DOMAIN-SUFFIX,githubcopilot.com",
     "DOMAIN-SUFFIX,microsoftonline.com",
-    "DOMAIN,api.github.com",
-
+    "DOMAIN,api.github.com",    
+  "DOMAIN,copilot.microsoft.com",
+      "DOMAIN,app-analytics-services.com",
     // Cursor / IDE
     "DOMAIN-SUFFIX,cursor.sh",
     "DOMAIN-SUFFIX,diabrowser.engineering",
@@ -129,14 +120,14 @@ function main(config) {
   config.rules = [...aiRuleLines, ...config.rules];
 
   // ===============================
-  // 6. 自动测速分组 0.1-fast
+  // 5. 自动测速分组 💧 MAX（0.1 / 0.01，不含 DIRECT）
   // ===============================
   const fastProxies = allProxies.filter(name =>
     name.includes("0.1") || name.includes("0.01")
   );
 
   if (fastProxies.length > 0) {
-    const fastGroupName = "0.1-fast";
+    const fastGroupName = "💧 MAX";
 
     const fastGroupExists = config["proxy-groups"].some(
       g => g.name === fastGroupName
@@ -152,19 +143,35 @@ function main(config) {
         tolerance: 50
       };
 
-      // 插入到第二个位置
+      // 插入到第二个代理组
       config["proxy-groups"].splice(1, 0, fastGroup);
-
-      // 注入第一个代理组
-      if (firstGroup) {
-        if (!Array.isArray(firstGroup.proxies)) {
-          firstGroup.proxies = [];
-        }
-        if (!firstGroup.proxies.includes(fastGroupName)) {
-          firstGroup.proxies.push(fastGroupName);
-        }
-      }
     }
+
+    // 注入第一个代理组作为首选
+    if (firstGroup) {
+      if (!Array.isArray(firstGroup.proxies)) {
+        firstGroup.proxies = [];
+      }
+
+      firstGroup.proxies = firstGroup.proxies.filter(p => p !== fastGroupName);
+      firstGroup.proxies.unshift(fastGroupName);
+    }
+  }
+
+  // ===============================
+  // 6. 创建 🎵 YouTube Music 代理组（select / 不含 DIRECT）
+  // ===============================
+  const ytMusicGroupName = "🎵 YouTube Music";
+  const ytMusicGroupExists = config["proxy-groups"].some(
+    g => g.name === ytMusicGroupName
+  );
+
+  if (!ytMusicGroupExists) {
+    config["proxy-groups"].push({
+      name: ytMusicGroupName,
+      type: "select",
+      proxies: [...allProxies]
+    });
   }
 
   // ===============================
