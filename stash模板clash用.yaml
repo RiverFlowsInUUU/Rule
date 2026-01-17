@@ -1,0 +1,249 @@
+mixed-port: 7890
+allow-lan: true
+mode: rule
+log-level: warning
+external-controller: :9090
+ipv6: false
+
+####################
+# 订阅源（mihomo 标准写法）
+####################
+proxy-providers:
+  SS:
+    type: http
+    url: 
+    interval: 3600
+    path: ./providers/ss.yaml
+    health-check:
+      enable: true
+      interval: 600
+      url: http://www.gstatic.com/generate_204
+    #override:
+    #  additional-prefix: "[SS] "
+
+####################
+# 手写节点（保留）
+####################
+proxies:
+
+####################
+# 代理分组
+####################
+proxy-groups:
+
+  # 功能分组
+  - name: Proxy
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Proxy.png
+    proxies:
+      - Auto
+      - Select
+      - HK
+      - "TW "
+      - "SG "
+      - "JP "
+      - "US "
+      - DIRECT
+
+  - name: AI
+    type: select
+    icon: https://raw.githubusercontent.com/Koolson/Qure/refs/heads/master/IconSet/Color/AI.png
+    include-all: true
+    filter: '^((?!(香港|HK|Hong Kong|🇭🇰)).)*$'
+    proxies:
+      - "TW "
+      - "SG "
+      - "JP "
+      - "US "
+      - Select
+
+  - name: Netflix
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Netflix.png
+    proxies:
+      - Auto
+      - Select
+      - HK
+      - "TW "
+      - "SG "
+      - "JP "
+      - "US "
+      - DIRECT
+
+  - name: Disney+
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Disney%2B.png
+    proxies:
+      - Auto
+      - Select
+      - HK
+      - "TW "
+      - "SG "
+      - "JP "
+      - "US "
+      - DIRECT
+
+  - name: Spotify
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Spotify.png
+    proxies:
+      - Auto
+      - Select
+      - HK
+      - "TW "
+      - "SG "
+      - "JP "
+      - "US "
+      - DIRECT
+
+  - name: YouTube
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/YouTube.png
+    proxies:
+      - Auto
+      - Select
+      - HK
+      - "TW "
+      - "SG "
+      - "JP "
+      - "US "
+      - DIRECT
+
+  - name: Speedtest
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Speedtest.png
+    proxies:
+      - Auto
+      - Select
+      - HK
+      - "TW "
+      - "SG "
+      - "JP "
+      - "US "
+      - DIRECT
+
+  - name: 默认
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Final.png
+    proxies:
+      - Proxy
+      - DIRECT
+
+  # 地区分组
+  - name: HK
+    type: url-test
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Hong_Kong.png
+    include-all: true
+    filter: "澳门|🇲🇴|港|🇭🇰|HK|(?i)Hong"
+    interval: 120
+    tolerance: 50
+    lazy: true
+    url: http://www.gstatic.com/generate_204
+
+  - name: "TW "
+    type: url-test
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Taiwan.png
+    include-all: true
+    filter: "台|🇹🇼|湾|TW|(?i)Taiwan"
+    interval: 120
+    tolerance: 50
+    lazy: true
+    url: http://www.gstatic.com/generate_204
+
+  - name: "SG "
+    type: url-test
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Singapore.png
+    include-all: true
+    filter: "新加坡|坡|狮城|🇸🇬|SG|(?i)Singapore"
+    interval: 120
+    tolerance: 50
+    lazy: true
+    url: http://www.gstatic.com/generate_204
+
+  - name: "JP "
+    type: url-test
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Japan.png
+    include-all: true
+    filter: "日|🇯🇵|东京|JP|(?i)Japan"
+    interval: 120
+    tolerance: 50
+    lazy: true
+    url: http://www.gstatic.com/generate_204
+
+  - name: "US "
+    type: url-test
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/United_States.png
+    include-all: true
+    filter: "美|🇺🇲|US|(?i)States|America"
+    interval: 120
+    tolerance: 50
+    lazy: true
+    url: http://www.gstatic.com/generate_204
+
+  - name: Auto
+    type: url-test
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Auto.png
+    include-all: true
+    interval: 120
+    tolerance: 50
+    lazy: true
+    url: http://www.gstatic.com/generate_204
+
+  - name: Select
+    type: select
+    icon: https://fastly.jsdelivr.net/gh/Koolson/Qure/IconSet/Color/Static.png
+    include-all: true
+
+####################
+# 规则（一字未动）
+####################
+rules:
+  - DOMAIN,copilot.microsoft.com,AI
+  - GEOSITE,category-ai-chat-!cn,AI
+  - GEOSITE,netflix,Netflix
+  - GEOSITE,disney,Disney+
+  - GEOSITE,spotify,Spotify
+  - GEOSITE,speedtest,Speedtest
+  - GEOSITE,github,Proxy
+  - IP-ASN,62014,Proxy,no-resolve
+  - IP-ASN,59930,Proxy,no-resolve
+  - IP-ASN,44907,Proxy,no-resolve
+  - IP-ASN,211157,Proxy,no-resolve
+  - PROCESS-NAME,Telegram.exe,Proxy
+  - PROCESS-NAME,Telegram,Proxy
+  - GEOSITE,telegram,Proxy
+  - GEOSITE,youtube,YouTube
+  - GEOSITE,google,Proxy
+  - GEOSITE,twitter,Proxy
+  - DOMAIN-SUFFIX,tapbots.com,Proxy
+  - GEOSITE,instagram,Proxy
+  - GEOSITE,facebook,Proxy
+  - GEOSITE,steam@cn,DIRECT
+  - GEOSITE,steam,Proxy
+  - DOMAIN-SUFFIX,iphone-ld.apple.com,DIRECT
+  - DOMAIN-SUFFIX,lcdn-locator.apple.com,DIRECT
+  - DOMAIN-SUFFIX,lcdn-registration.apple.com,DIRECT
+  - DOMAIN-SUFFIX,push.apple.com,DIRECT
+  - PROCESS-NAME,trustd,Proxy
+  - GEOSITE,microsoft@cn,DIRECT
+  - GEOSITE,microsoft,Proxy
+  - GEOSITE,xbox,Proxy
+  - GEOIP,LAN,DIRECT
+  - GEOIP,CN,DIRECT
+  - MATCH,默认
+
+####################
+# DNS（保持）
+####################
+dns:
+  enable: true
+  default-nameserver:
+    - 114.114.115.115
+    - 119.28.28.28
+    - 223.6.6.6
+    - system
+  nameserver:
+    - https://223.5.5.5/dns-query
+    - https://223.6.6.6/dns-query
+    - https://1.12.12.12/dns-query
+    - https://120.53.53.53/dns-query
