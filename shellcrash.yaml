@@ -32,6 +32,7 @@ proxy-groups:
   - {name: 💧 省流智能, type: smart, uselightgbm: false, collectdata: false, include-all: true, interval: 300, filter: "^(?=.*(0\\.1|0\\.01))((?!剩余|流量|到期|有效).)*$"}
   - {name: ♻️ 自动选择, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "^((?!(直连)).)*$"}
   - {name: 👆 节点选择, type: select, include-all: true, filter: "^((?!(直连)).)*$"}
+  - {name: ❇️ Emby, type: select, include-all: true, filter: "^((?!(直连)).)*$"}
   - {name: 📺 YouTube, type: select, proxies: [🚀 默认代理, 🇺🇲 美国故转, 🇭🇰 香港故转, 🇯🇵 日本故转, 🇸🇬 狮城故转, 🇺🇲 美国智能, 🇭🇰 香港智能, 🇯🇵 日本智能, 🇸🇬 狮城智能, ♻️ 自动选择, 🇭🇰 香港选择, 🇯🇵 日本选择, 🇸🇬 狮城选择, 🇺🇲 美国选择,]}
   - {name: 🔍 Google, type: select, proxies: [🚀 默认代理, 🇭🇰 香港故转, 🇯🇵 日本故转, 🇸🇬 狮城故转, 🇺🇲 美国故转, 🇭🇰 香港智能, 🇯🇵 日本智能, 🇸🇬 狮城智能, 🇺🇲 美国智能, ♻️ 自动选择, 🇭🇰 香港选择, 🇯🇵 日本选择, 🇸🇬 狮城选择, 🇺🇲 美国选择, 👆 节点选择]}
   - {name: 🤖 AI, type: select, proxies: [👆 节点选择, 🇯🇵 日本故转, 🇸🇬 狮城故转, 🇺🇲 美国故转, 🇯🇵 日本智能, 🇸🇬 狮城智能, 🇺🇲 美国智能, 🇯🇵 日本选择, 🇸🇬 狮城选择, 🇺🇲 美国选择, 🚀 默认代理, ♻️ 自动选择 ]}
@@ -64,6 +65,11 @@ rules:
   - RULE-SET,private_ip,直连,no-resolve
   - RULE-SET,private_domain,直连
   - DOMAIN-SUFFIX,qichiyu.com,🚀 默认代理
+  - DOMAIN-SUFFIX,jsq.vban.xyz,❇️ Emby
+  - DOMAIN-SUFFIX,link00.okemby.org,❇️ Emby
+  - DOMAIN-SUFFIX,link01.okemby.org,❇️ Emby
+  - DOMAIN-SUFFIX,www.lilyemby.com,❇️ Emby
+  - DOMAIN-SUFFIX,emby.bangumi.ca,❇️ Emby  
   - DOMAIN,swscan.apple.com,🚫 AD and Apple update
   - DOMAIN,swdist.apple.com,🚫 AD and Apple update
   - DOMAIN,swcdn.apple.com,🚫 AD and Apple update
