@@ -6,16 +6,12 @@ ipv6: false
 mode: Rule
 log-level: info
 external-controller: 127.0.0.1:9090
-
-geodata-mode: true
-
 dns:
   enable: true
   ipv6: false
   listen: 0.0.0.0:53
   fake-ip-range: 198.18.0.1/16
   use-hosts: true
-
   fake-ip-filter:
     - "*.lan"
     - "*.local"
@@ -26,15 +22,12 @@ dns:
     - localhost.ptlogin2.qq.com
     - "*.msftncsi.com"
     - www.msftconnecttest.com
-
   default-nameserver:
     - 119.29.29.29
     - 223.5.5.5
-
   nameserver:
     - 119.29.29.29
     - 223.5.5.5
-
   nameserver-policy:
     geosite:cn:
       - 119.29.29.29
@@ -42,17 +35,14 @@ dns:
     geosite:geolocation-!cn:
       - tls://1.0.0.1:853
       - tls://dns.google:853
-
   proxy-server-nameserver:
     - 119.29.29.29
     - 223.5.5.5
-
   fallback:
     - 8.8.8.8
     - 1.1.1.1
     - tls://1.0.0.1:853
     - tls://dns.google:853
-
   fallback-filter:
     geoip: true
     geoip-code: CN
@@ -60,16 +50,8 @@ dns:
       - gfw
     ipcidr:
       - 240.0.0.0/4
-
 proxies:
-  - name: 🇺🇸 US AI
-    server: cloudcone.20240211.xyz
-    port: 52341
-    type: hysteria2
-    password: QMpJVYJVps
-    auth: QMpJVYJVps
-    skip-cert-verify: false
-
+  - {name: 🇺🇸 US AI, server: cloudcone.20240211.xyz, port: 52341, type: hysteria2, password: QMpJVYJVps, auth: QMpJVYJVps, skip-cert-verify: false}
 proxy-groups:
   - name: ✅ Top
     type: select
@@ -84,7 +66,6 @@ proxy-groups:
       - 🇯🇵 JP
       - 🇺🇲 US
       - 🇰🇷 KR
-
   - name: ⚡ Fast
     type: url-test
     url: http://www.gstatic.com/generate_204
@@ -92,12 +73,10 @@ proxy-groups:
     tolerance: 50
     proxies:
       - 🇺🇸 US AI
-
   - name: 🚀 Select
     type: select
     proxies:
       - 🇺🇸 US AI
-
   - name: 🌀 Fallback
     type: fallback
     url: http://www.gstatic.com/generate_204
@@ -105,14 +84,12 @@ proxy-groups:
     tolerance: 50
     proxies:
       - 🇺🇸 US AI
-
   - name: ❤️ Emby
     type: select
     proxies:
       - ✅ Top
       - DIRECT
       - 🚀 Select
-
   - name: 💬 OpenAi
     type: select
     proxies:
@@ -125,7 +102,6 @@ proxy-groups:
       - 🇺🇲 US
       - 🇰🇷 KR
       - 🚀 Select
-
   - name: 🔍 Bing
     type: select
     proxies:
@@ -138,7 +114,6 @@ proxy-groups:
       - 🇯🇵 JP
       - 🇰🇷 KR
       - 🚀 Select
-
   - name: 🎵 Spotify
     type: select
     proxies:
@@ -151,7 +126,6 @@ proxy-groups:
       - 🇯🇵 JP
       - 🇰🇷 KR
       - 🚀 Select
-
   - name: 📹 YouTube
     type: select
     proxies:
@@ -164,7 +138,6 @@ proxy-groups:
       - 🇺🇲 US
       - 🇰🇷 KR
       - 🚀 Select
-
   - name: 📲 Telegram
     type: select
     proxies:
@@ -178,25 +151,21 @@ proxy-groups:
       - 🇰🇷 KR
       - 🚀 Select
       - DIRECT
-
   - name: Ⓜ️ OneDrive
     type: select
     proxies:
       - DIRECT
       - ✅ Top
-
   - name: Ⓜ️ Microsoft
     type: select
     proxies:
       - DIRECT
       - ✅ Top
-
   - name: 🍎 Apple
     type: select
     proxies:
       - DIRECT
       - ✅ Top
-
   - name: 🔮 Load-balance
     type: load-balance
     strategy: consistent-hashing
@@ -205,7 +174,6 @@ proxy-groups:
     tolerance: 50
     proxies:
       - 🇺🇸 US AI
-
   - name: 🎮 Game
     type: select
     proxies:
@@ -218,7 +186,6 @@ proxy-groups:
       - 🇯🇵 JP
       - 🇰🇷 KR
       - 🚀 Select
-
   - name: 🎥 Netflix
     type: select
     proxies:
@@ -231,7 +198,6 @@ proxy-groups:
       - 🇺🇲 US
       - 🇰🇷 KR
       - 🚀 Select
-
   - name: 🐟 Final
     type: select
     proxies:
@@ -245,7 +211,6 @@ proxy-groups:
       - 🇺🇲 US
       - 🇰🇷 KR
       - 🚀 Select
-
   - name: 🇭🇰 HK
     type: url-test
     url: http://www.gstatic.com/generate_204
@@ -253,7 +218,6 @@ proxy-groups:
     tolerance: 50
     proxies:
       - DIRECT
-
   - name: 🇯🇵 JP
     type: url-test
     url: http://www.gstatic.com/generate_204
@@ -261,7 +225,6 @@ proxy-groups:
     tolerance: 50
     proxies:
       - DIRECT
-
   - name: 🇺🇲 US
     type: url-test
     url: http://www.gstatic.com/generate_204
@@ -269,7 +232,6 @@ proxy-groups:
     tolerance: 150
     proxies:
       - 🇺🇸 US AI
-
   - name: 🇹🇼 TW
     type: url-test
     url: http://www.gstatic.com/generate_204
@@ -277,7 +239,6 @@ proxy-groups:
     tolerance: 50
     proxies:
       - DIRECT
-
   - name: 🇸🇬 SG
     type: url-test
     url: http://www.gstatic.com/generate_204
@@ -285,7 +246,6 @@ proxy-groups:
     tolerance: 50
     proxies:
       - DIRECT
-
   - name: 🇰🇷 KR
     type: url-test
     url: http://www.gstatic.com/generate_204
@@ -293,7 +253,6 @@ proxy-groups:
     tolerance: 50
     proxies:
       - DIRECT
-
 rule-providers:
   reject:
     type: http
@@ -365,6 +324,13 @@ rule-providers:
     path: ./ruleset/netflix.yaml
     interval: 86400
 
+  emby:
+    type: http
+    behavior: classical
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Emby/Emby.yaml
+    path: ./ruleset/emby.yaml
+    interval: 86400
+
 rules:
   - RULE-SET,private,DIRECT
   - RULE-SET,reject,REJECT
@@ -378,6 +344,7 @@ rules:
   - RULE-SET,telegram,📲 Telegram
   - RULE-SET,spotify,🎵 Spotify
   - RULE-SET,netflix,🎥 Netflix
+  - RULE-SET,emby,❤️ Emby
 
   - GEOIP,LAN,DIRECT,no-resolve
   - GEOIP,CN,DIRECT,no-resolve
