@@ -1,0 +1,36 @@
+#dns
+upstream {
+  alidns: 'udp://223.5.5.5:53'
+  googledns: 'tcp+udp://8.8.8.8:53'
+}
+
+routing {
+  request {
+    qname(geosite:private) -> alidns
+    qname(geosite:openai) -> googledns
+    qname(geosite:google-gemini) -> googledns
+    qname(geosite:category-ai-!cn) -> googledns
+    qname(geosite:youtube) -> googledns
+    qname(geosite:cn) -> alidns
+    fallback: googledns
+  }
+}
+
+
+
+#路由
+pname(NetworkManager, systemd-resolved, dnsmasq) -> must_direct
+dip(geoip:private) -> direct
+dip(224.0.0.0/4, 255.255.255.255/32) -> direct
+
+#ipversion(6) -> block
+
+domain(geosite:openai) -> OpenAI
+domain(geosite:google-gemini) -> Gemini
+domain(geosite:cloudflare) -> Claude
+domain(geosite:category-ai-!cn) -> Claude
+domain(geosite:youtube) -> YouTube
+dip(geoip:cn) -> direct
+domain(geosite:cn) -> direct
+
+fallback: proxy
