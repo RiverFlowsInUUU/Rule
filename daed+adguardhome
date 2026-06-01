@@ -1,0 +1,61 @@
+🎯 终极定版配置（绝无泄露 + 日志 + 国外快）
+一、AdGuard Home 配置
+设置 → DNS 设置 → 上游 DNS 服务器
+8.8.8.8
+只填这一个，不要加别的，不要加国内 DNS，不要加 DoH。
+并行请求
+✅ 开启
+Bootstrap DNS 服务器
+223.5.5.5
+设置 → DNS 设置 → 速度限制
+保持默认或根据你设备性能调整，不影响分流。
+二、Daed DNS 配置
+upstream {
+  alidns: 'udp://223.5.5.5:53'
+  tencent: 'udp://119.29.29.29'
+  googledns: 'tcp+udp://8.8.8.8:53'
+}
+routing {
+  request {
+    qname(geosite:cn) -> alidns
+    fallback: googledns
+  }
+}
+三、Daed 路由配置
+# 系统本地 DNS 放行（防死循环）
+pname(NetworkManager, systemd-resolved, dnsmasq) -> must_direct
+# 【绝对不要加以下任何一条】
+# ❌ pname(AdGuardHome) -> must_direct
+# ❌ dport(53) -> must_direct
+dip(geoip:private) -> direct
+dip(224.0.0.0/4, 255.255.255.255/32) -> direct
+# ipversion(6) -> block
+domain(geosite:apple) -> direct
+domain(geosite:openai) -> OpenAI
+domain(geosite:google-gemini) -> Gemini
+domain(geosite:cloudflare) -> Claude
+domain(geosite:category-ai-!cn) -> Claude
+domain(geosite:youtube) -> YouTube
+dip(geoip:cn) -> direct
+domain(geosite:cn) -> direct
+fallback: proxy
+四、Daed 全局设置
+项目	值	
+Dial Mode	domain++	
+五、客户端 DNS 设置
+客户端（手机/电脑）的 DNS 指向 AdGuard Home 所在机器的 IP，端口 53。
+六、流量走向验证
+场景	流程	结果	
+国外域名（google.com）	客户端→AdG(53)→记录日志→AdG问8.8.8.8→Daed TUN拦截→Daed DNS匹配fallback→googledns解析→Daed路由匹配proxy→走代理	✅ 零泄露	
+国内域名（baidu.com）	客户端→AdG(53)→记录日志→AdG问8.8.8.8→Daed TUN拦截→Daed DNS匹配geosite:cn→转223.5.5.5解析→Daed路由匹配direct→直连	✅ 毫秒响应	
+广告域名	客户端→AdG(53)→拦截+记录日志→结束	✅ 广告过滤	
+HTTPS数据流量	客户端发起连接→Daed TUN拦截→domain++嗅探SNI→匹配domain规则精准分流	✅ 精准分流	
+七、铁律（碰了就炸）
+❌ 永远不要做	原因	
+AdG 上游填 127.0.0.1:53	AdG 自己监听 53，死循环	
+AdG 上游填国内 DNS（223.5.5.5 等）	国外域名 DNS 泄露	
+路由加 pname(AdGuardHome) -> must_direct	AdG 逃出 Daed 掌控，DNS 泄露	
+路由加 dport(53) -> must_direct	DNS 流量逃出 Daed，泄露	
+Dial Mode 改成 ip	domain 规则全部失效，分流乱套	
+Daed DNS 上游加 127.0.0.1:53	回环嵌套，死循环	
+截图存档，以后还原就照这个来，一个字都不要改。🫡
