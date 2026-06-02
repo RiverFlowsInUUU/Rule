@@ -1,61 +1,152 @@
-🎯 终极定版配置（绝无泄露 + 日志 + 国外快）
-一、AdGuard Home 配置
-设置 → DNS 设置 → 上游 DNS 服务器
-8.8.8.8
-只填这一个，不要加别的，不要加国内 DNS，不要加 DoH。
-并行请求
-✅ 开启
-Bootstrap DNS 服务器
-223.5.5.5
-设置 → DNS 设置 → 速度限制
-保持默认或根据你设备性能调整，不影响分流。
-二、Daed DNS 配置
+你说得对，这是前置关键步骤，我遗漏了。在 ImmortalWrt/OpenWrt 上，dnsmasq 默认霸占 53 端口，AdGuard 根本起不来或者抢不过。必须先让 dnsmasq 腾地方。
+下面是补全后的完整教程，把 dnsmasq 改端口作为第一步。
+Daed 透明代理与 AdGuard Home 完美共存方案（ImmortalWrt / OpenWrt）
+零、前置准备：让 dnsmasq 交出 53 端口
+ImmortalWrt 默认由 dnsmasq 监听 53 端口，AdGuard Home 无法启动或无法接管。必须先把 dnsmasq 的 DNS 功能移到其他端口。
+1.  修改 dnsmasq 端口
+把 dnsmasq DNS 端口从 53 改到 5353（仅保留 DHCP 功能）
+uci set dhcp.@dnsmasq[0].port='5353'
+提交并重启
+uci commit dhcp
+/etc/init.d/dnsmasq restart
+验证：
+netstat -tlnp | grep :53
+应该只看到 AdGuardHome（后续步骤）监听 53，dnsmasq 不再出现。
+2. 可选：让 dnsmasq 的 DHCP 下发 AdGuard 作为 DNS（如果局域网设备不走透明代理）
+如果你希望局域网内不走代理的设备也能享受 AdGuard 过滤，在 AdGuard 启动后执行：
+uci set dhcp.@dnsmasq[0].dhcp_option='6,192.168.x.1'  # 你的路由器 LAN IP
+uci commit dhcp
+/etc/init.d/dnsmasq restart
+但在本方案中，因为 Daed TUN 会拦截所有客户端流量（包括 DNS），所以只要 AdGuard 监听 127.0.0.1:53 即可，DHCP 下发什么 DNS 并不影响透明代理设备。
+一、方案概述
+核心诉求：AdGuard Home 负责广告过滤 + 图形化查询日志，Daed 负责透明代理分流，两者共存且不 DNS 泄露，国内网站解析不绕路。
+架构：
+客户端 → Daed TUN → Daed DNS → AdGuard(:53) → FAK-DNS 规则分流
+↓
+国内域名 → 223.5.5.5 / 119.29.29.29 (直连，毫秒级)
+国外域名 → DoH (1.1.1.1 / 8.8.8.8) → 经 Daed 代理出去 (加密防泄露)
+关键点：AdGuard 到 Cloudflare/Google DoH 的 HTTPS 流量必须被 Daed 路由强制走代理，否则 GFW 直接阻断 1.1.1.1:443 和 8.8.8.8:443，导致国外域名无法解析。
+二、AdGuard Home 配置
+1.  下载现成国内域名分流规则
+wget -O /etc/adguardhome/FAK-DNS.txt 
+  https://raw.githubusercontent.com/Leev1s/FAK-DNS/master/converted/FAK-DNS.txt
+该文件包含约 6 万条国内域名，自动指向阿里 DNS；末尾默认回退到 DoH。
+2. 修改配置文件 /etc/adguardhome/adguardhome.yaml
+在 dns: 段下配置：
+dns:
+bind_hosts:
+- 127.0.0.1
+port: 53
+upstream_dns_file: "/etc/adguardhome/FAK-DNS.txt"
+bootstrap_dns:
+- 223.5.5.5
+- 119.29.29.29
+fallback_dns:
+- 223.5.5.5
+- 119.29.29.29
+cache_size: 4194304
+cache_ttl_min: 60
+cache_optimistic: true
+注意：
+•  bind_hosts 只写 127.0.0.1，port 写 53，确保 AdGuard 只接受本地转发。
+•  如果之前存在 upstream_dns: 列表，必须删除，不能与 upstream_dns_file 共存。
+•  fallback_dns 是保险：当 DoH 暂时不通时，回退到国内 DNS，避免断网。
+3. Web UI 辅助设置
+•  设置 → 常规设置 → 监听接口：只保留 127.0.0.1:53，删除 0.0.0.0:53
+•  设置 → DNS 设置 → DNSSEC：关闭
+•  设置 → DNS 设置 → 使用 EDNS 客户端子网：开启（CDN 调度更优）
+•  设置 → DNS 设置 → 乐观缓存：开启
+•  过滤器 → DNS 拦截列表：保留你原有的广告过滤订阅，无需改动
+4. 重启 AdGuard
+/etc/init.d/adguardhome restart
+验证：
+netstat -tlnp | grep :53
+应显示 AdGuardHome 在 127.0.0.1:53 监听。
+三、Daed 配置
+1.  DNS 模块
 upstream {
-  alidns: 'udp://223.5.5.5:53'
-  tencent: 'udp://119.29.29.29'
-  googledns: 'tcp+udp://8.8.8.8:53'
+adguard: 'udp://127.0.0.1:53'
 }
 routing {
-  request {
-    qname(geosite:cn) -> alidns
-    fallback: googledns
-  }
+request {
+fallback: adguard
 }
-三、Daed 路由配置
-# 系统本地 DNS 放行（防死循环）
+}
+严禁把 127.0.0.1:53 同时写在 AdGuard 的上游里，否则 AdGuard 会问自已，形成死循环。
+2. 路由规则（顺序至关重要）
+第一步：DoH 服务器强制走代理，绕过 GFW 对 443 端口的阻断
+这四行必须放在最前面，否则会被下面的 pname(AdGuardHome) -> must_direct 截走
+dip(1.1.1.1/32) -> proxy
+dip(1.0.0.1/32) -> proxy
+dip(8.8.8.8/32) -> proxy
+dip(8.8.4.4/32) -> proxy
+第二步：系统 DNS 组件和 AdGuard 自身流量直连
 pname(NetworkManager, systemd-resolved, dnsmasq) -> must_direct
-# 【绝对不要加以下任何一条】
-# ❌ pname(AdGuardHome) -> must_direct
-# ❌ dport(53) -> must_direct
+pname(AdGuardHome) -> must_direct
+第三步：局域网/广播地址直连
 dip(geoip:private) -> direct
 dip(224.0.0.0/4, 255.255.255.255/32) -> direct
-# ipversion(6) -> block
-domain(geosite:apple) -> direct
+第四步：AI / 流媒体等特定域名分流（按需保留或修改）
 domain(geosite:openai) -> OpenAI
 domain(geosite:google-gemini) -> Gemini
 domain(geosite:cloudflare) -> Claude
 domain(geosite:category-ai-!cn) -> Claude
 domain(geosite:youtube) -> YouTube
+第五步：国内 IP / 域名直连
 dip(geoip:cn) -> direct
 domain(geosite:cn) -> direct
+第六步：其余全部走代理
 fallback: proxy
-四、Daed 全局设置
-项目	值	
-Dial Mode	domain++	
-五、客户端 DNS 设置
-客户端（手机/电脑）的 DNS 指向 AdGuard Home 所在机器的 IP，端口 53。
-六、流量走向验证
-场景	流程	结果	
-国外域名（google.com）	客户端→AdG(53)→记录日志→AdG问8.8.8.8→Daed TUN拦截→Daed DNS匹配fallback→googledns解析→Daed路由匹配proxy→走代理	✅ 零泄露	
-国内域名（baidu.com）	客户端→AdG(53)→记录日志→AdG问8.8.8.8→Daed TUN拦截→Daed DNS匹配geosite:cn→转223.5.5.5解析→Daed路由匹配direct→直连	✅ 毫秒响应	
-广告域名	客户端→AdG(53)→拦截+记录日志→结束	✅ 广告过滤	
-HTTPS数据流量	客户端发起连接→Daed TUN拦截→domain++嗅探SNI→匹配domain规则精准分流	✅ 精准分流	
-七、铁律（碰了就炸）
-❌ 永远不要做	原因	
-AdG 上游填 127.0.0.1:53	AdG 自己监听 53，死循环	
-AdG 上游填国内 DNS（223.5.5.5 等）	国外域名 DNS 泄露	
-路由加 pname(AdGuardHome) -> must_direct	AdG 逃出 Daed 掌控，DNS 泄露	
-路由加 dport(53) -> must_direct	DNS 流量逃出 Daed，泄露	
-Dial Mode 改成 ip	domain 规则全部失效，分流乱套	
-Daed DNS 上游加 127.0.0.1:53	回环嵌套，死循环	
-截图存档，以后还原就照这个来，一个字都不要改。🫡
+3.  Dial Mode
+dial {
+mode: domain++
+}
+原因：DNS 经过 AdGuard 后，国外域名返回的是真实 IP，Daed 必须靠 SNI 嗅探域名来做最终分流决策。
+4. 重启 Daed
+/etc/init.d/daed restart
+----
+四、代理节点为域名时的额外保险（可选）
+如果你的代理节点地址是域名（如 vps.example.com），Daed 启动时需要先解析它。如果此时 AdGuard 的 DoH 还没通，可能导致代理连不上。
+最简单的可视化做法：在 AdGuard Web UI 里手动指定，避免改 hosts。
+路径：AdGuard → 过滤器 → DNS 重写 → 添加 DNS 重写
+域名	IP 地址
+你的代理节点域名.com	x.x.x.x
+这样 AdGuard 直接返回固定 IP，代理秒连，DoH 立刻恢复。
+五、验证三步走
+1.  国内速度验证
+nslookup baidu.com 127.0.0.1
+•  应返回国内 IP（如 110.242.68.66）
+•  响应时间应 << 50ms
+2. 国外解析验证
+nslookup google.com 127.0.0.1
+•  应返回国外 IP（如 142.250.x.x）
+•  如果返回超时，检查 Daed 路由里 dip(1.1.1.1/32) -> proxy 是否生效
+3. 广告过滤验证
+在 AdGuard Web UI → 查询日志里搜索：
+•  doubleclick.net
+•  googleadservices.com
+状态应显示 已拦截（Blocked）。
+4. DNS 泄露验证（客户端浏览器访问）
+•  https://www.dnsleaktest.com https://www.dnsleaktest.com
+•  检测到的 DNS 服务器应为 Cloudflare 或 Google，不应出现本地运营商 DNS。
+六、妥协点总结
+项目	状态	说明
+国内广告过滤	✅	AdGuard 正常工作，所有流量经过 AdGuard
+国内解析速度	✅	FAK-DNS 分流，回归毫秒级
+国外 DNS 防泄露	✅	DoH 加密，ISP 看不到查询内容
+AdGuard 图形界面	✅	100% 保留，日志、统计、过滤器全部可用
+额外中间件	✅	不需要 MosDNS / SmartDNS
+AdGuard 真实客户端 IP	❌	显示为 127.0.0.1（Daed 转发的固有代价）
+DoH 流量走向	⚠️	经代理出去，代理服务器知道你在连 DNS（但看不到查询内容）
+七、常见问题速查
+Q：AdGuard 启动失败，提示端口被占用？
+A：先执行前置步骤，把 dnsmasq 端口改成 5353，确保 53 端口空闲。
+Q：AdGuard 启动失败，提示 YAML 错误？
+A：检查 upstream_dns_file 与 upstream_dns 是否同时存在，必须只保留 upstream_dns_file。
+Q：国外网站还是打不开？
+A：检查 Daed 路由里 dip(1.1.1.1/32) -> proxy 等 4 行是否在最前面，且 AdGuard 日志里是否还有 i/o timeout。
+Q：国内网站解析慢？
+A：检查 AdGuard 的 upstream_dns_file 是否生效，确认 nslookup baidu.com 走的是 223.5.5.5 而不是 DoH。
+Q：AdGuard 日志里客户端全是 127.0.0.1，怎么区分设备？
+A：这是方案固有代价。如需区分设备，可在 AdGuard → 设置 → DNS 设置 → 访问设置里按客户端 IP 设置不同的过滤策略，但前提是各设备不走 Daed TUN 统一转发（即放弃透明代理，改用设备级代理）。
+按这篇完整教程配置后，你的 ImmortalWrt 即可实现 dnsmasq 让出 53 端口 → AdGuard 接管 → 广告过滤 + 国内外 DNS 分流 → Daed 透明代理 + 防泄露 的完整链路。
