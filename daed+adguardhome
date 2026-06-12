@@ -28,8 +28,7 @@ uci commit dhcp
 关键点：AdGuard 到 Cloudflare/Google DoH 的 HTTPS 流量必须被 Daed 路由强制走代理，否则 GFW 直接阻断 1.1.1.1:443 和 8.8.8.8:443，导致国外域名无法解析。
 二、AdGuard Home 配置
 1.  下载现成国内域名分流规则
-wget -O /etc/adguardhome/FAK-DNS.txt 
-  https://raw.githubusercontent.com/Leev1s/FAK-DNS/master/converted/FAK-DNS.txt
+curl -o /etc/adguardhome/FAK-DNS.txt https://raw.githubusercontent.com/Leev1s/FAK-DNS/master/converted/FAK-DNS.txt
 该文件包含约 6 万条国内域名，自动指向阿里 DNS；末尾默认回退到 DoH。
 2. 修改配置文件 /etc/adguardhome/adguardhome.yaml
 在 dns: 段下配置：
