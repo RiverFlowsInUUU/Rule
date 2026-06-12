@@ -30,6 +30,11 @@ uci commit dhcp
 1.  下载现成国内域名分流规则
 curl -o /etc/adguardhome/FAK-DNS.txt https://raw.githubusercontent.com/Leev1s/FAK-DNS/master/converted/FAK-DNS.txt
 该文件包含约 6 万条国内域名，自动指向阿里 DNS；末尾默认回退到 DoH。
+编辑FAK-DNS.txt最后加四行
+https://8.8.8.8/dns-query
+https://8.8.4.4/dns-query
+https://1.1.1.1/dns-query
+https://1.0.0.1/dns-query
 2. 修改配置文件 /etc/adguardhome/adguardhome.yaml
 在 dns: 段下配置：
 dns:
