@@ -56,6 +56,9 @@ cache_optimistic: true
 •  bind_hosts 只写 127.0.0.1，port 写 53，确保 AdGuard 只接受本地转发。
 •  如果之前存在 upstream_dns: 列表，必须删除，不能与 upstream_dns_file 共存。
 •  fallback_dns 是保险：当 DoH 暂时不通时，回退到国内 DNS，避免断网。
+锁死配置 chmod 444 /mnt/mmcblk0p3/adguardhome/conf/adguardhome.yaml
+解锁 chmod 644 /mnt/mmcblk0p3/adguardhome/conf/adguardhome.yaml
+
 3. Web UI 辅助设置
 •  设置 → 常规设置 → 监听接口：只保留 127.0.0.1:53，删除 0.0.0.0:53
 •  设置 → DNS 设置 → DNSSEC：关闭
