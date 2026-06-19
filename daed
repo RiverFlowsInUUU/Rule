@@ -34,3 +34,30 @@ dip(geoip:cn) -> direct
 domain(geosite:cn) -> direct
 
 fallback: proxy
+
+
+
+# ==================== 1. 进程直连（强制） ====================
+pname(NetworkManager, systemd-resolved, dnsmasq) -> must_direct
+
+# ==================== 2. 广告域名拦截 ====================
+domain(ext:'DustinWin.dat:ads') -> block
+domain(ext:'elysias123.dat:category-ads-AWAvenueAdsRule') -> block
+
+# ==================== 3. 私有/内网 IP 直连 ====================
+dip(geoip:private) -> direct
+dip(192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12) -> direct
+
+# ==================== 4. AI 服务特定路由 ====================
+domain(geosite:openai)          -> OpenAI
+domain(geosite:google-gemini)   -> Gemini
+domain(geosite:cloudflare)      -> Claude
+domain(geosite:category-ai-!cn) -> Claude
+domain(geosite:youtube)         -> YouTube
+
+# ==================== 5. 国内域名 / IP 直连 ====================
+domain(geosite:cn) -> direct
+dip(geoip:cn)      -> direct
+
+# ==================== 6. 默认回退策略 ====================
+fallback: proxy
