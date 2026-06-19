@@ -61,3 +61,22 @@ dip(geoip:cn)      -> direct
 
 # ==================== 6. 默认回退策略 ====================
 fallback: proxy
+
+
+
+pname(NetworkManager, systemd-resolved, dnsmasq) -> must_direct
+#domain(ext:'DustinWin.dat:ads') -> block
+domain(ext:'elysias123.dat:category-ads-AWAvenueAdsRule') -> block
+dip(geoip:private) -> direct
+dip(192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12) -> direct
+domain(geosite:apple)           -> direct
+domain(geosite:openai)          -> OpenAI
+domain(geosite:google-gemini)   -> Gemini
+domain(geosite:cloudflare)      -> Claude
+domain(geosite:category-ai-!cn) -> Claude
+domain(geosite:youtube)         -> YouTube
+domain(geosite:github)          -> proxy
+dip(geoip:telegram)             -> proxy
+domain(geosite:cn)              -> direct
+dip(geoip:cn)                   -> direct
+fallback: proxy
